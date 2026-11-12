@@ -30,7 +30,8 @@
     -webkit-tap-highlight-color: transparent;
   }
   #map { position: fixed; inset: 0; background: var(--bg); }
-  .tint { filter: sepia(1) hue-rotate(218deg) saturate(1.7) brightness(1.15) contrast(1.05); }
+  /* světlé dlaždice OpenStreetMap převrácené do tmavě fialové */
+  .tint { filter: grayscale(1) invert(1) brightness(1.5) contrast(.92) sepia(1) hue-rotate(218deg) saturate(1.9); }
 
   .glass {
     background: var(--panel); border: 1px solid var(--line);
@@ -312,10 +313,8 @@
   map.attributionControl.setPrefix(false);
   const OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
   const bases = {
-    purple: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      { subdomains: 'abcd', maxZoom: 20, className: 'tint', attribution: OSM + ' &copy; <a href="https://carto.com/attributions">CARTO</a>' }),
-    light: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-      { subdomains: 'abcd', maxZoom: 20, attribution: OSM + ' &copy; <a href="https://carto.com/attributions">CARTO</a>' }),
+    purple: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, className: 'tint', attribution: OSM }),
+    light: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: OSM }),
     sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       { maxZoom: 19, attribution: 'Snímky &copy; Esri, Maxar, Earthstar Geographics · data ' + OSM }),
   };
