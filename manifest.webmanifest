@@ -1,0 +1,17 @@
+{
+  "name": "Fialová mapa",
+  "short_name": "Mapa",
+  "description": "Navigace, radary, úsekové měření a rychlostní limity ve fialové.",
+  "lang": "cs",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#12071f",
+  "theme_color": "#1a0b2e",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
