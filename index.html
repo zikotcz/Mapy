@@ -835,6 +835,8 @@
       accCircle = L.circle(ll, { radius: c.accuracy, color: '#c084fc', weight: 1, fillOpacity: .08, interactive: false }).addTo(map);
     } else { meMarker.setLatLng(ll); accCircle.setLatLng(ll).setRadius(c.accuracy); }
     if (follow) map.setView(ll, Math.max(map.getZoom(), nav ? 17 : 16), { animate: true });
+    else if (autoCenter && !place && !route) map.setView(ll, 15);     // první zjištění polohy po načtení stránky
+    autoCenter = false;
     updateDrive();
     updateNav();
   }
@@ -858,7 +860,11 @@
     if (!me) setStatus('Zjišťuji polohu…');
     startWatch(); setFollow(true);
   });
-  map.on('dragstart', stopFollow);
+  map.on('dragstart', () => { stopFollow(); autoCenter = false; });
+
+  // hned po načtení si stránka sama řekne o povolení polohy a přesune mapu k tobě
+  let autoCenter = true;
+  startWatch();
 
   refresh();
 })();
