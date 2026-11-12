@@ -3,194 +3,281 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fialová mapa – radary a rychlostní limity</title>
+<title>Fialová mapa – navigace, radary a rychlostní limity</title>
 <meta name="theme-color" content="#1a0b2e">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
   :root {
     --bg: #12071f;
-    --panel: rgba(30, 14, 54, .88);
-    --panel-solid: #1e0e36;
-    --line: rgba(196, 160, 255, .22);
-    --text: #f3ecff;
+    --panel: rgba(32, 16, 58, .86);
+    --panel-solid: #20103a;
+    --line: rgba(196, 160, 255, .2);
+    --text: #f5efff;
     --muted: #b9a5dc;
     --accent: #a855f7;
     --accent-2: #d946ef;
-    --accent-soft: rgba(168, 85, 247, .18);
+    --accent-soft: rgba(168, 85, 247, .2);
     --danger: #ff4d6d;
-    --radius: 16px;
+    --shadow: 0 8px 28px rgba(8, 2, 20, .55);
+    --sheet-h: 0px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; }
   body {
-    background: var(--bg); color: var(--text);
-    font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    overflow: hidden;
+    background: var(--bg); color: var(--text); overflow: hidden;
+    font: 15px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
   }
   #map { position: fixed; inset: 0; background: var(--bg); }
-  /* fialové tónování podkladové mapy */
-  .leaflet-tile-pane { filter: sepia(1) hue-rotate(218deg) saturate(1.7) brightness(1.15) contrast(1.05); }
+  .tint { filter: sepia(1) hue-rotate(218deg) saturate(1.7) brightness(1.15) contrast(1.05); }
 
-  .panel {
-    position: fixed; z-index: 1000;
-    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 10px 30px rgba(8, 2, 20, .55);
+  .glass {
+    background: var(--panel); border: 1px solid var(--line);
+    backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: var(--shadow);
   }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  [hidden] { display: none !important; }
 
-  /* horní lišta */
-  #top { top: 12px; left: 12px; width: min(380px, calc(100vw - 24px)); padding: 12px; }
-  #top h1 {
-    margin: 0 0 10px; font-size: 17px; letter-spacing: .2px; display: flex; align-items: center; gap: 8px;
+  /* ---------- levý sloupec: hledání, filtry, karta ---------- */
+  #left {
+    position: fixed; z-index: 1000; top: 12px; left: 12px; width: 390px; max-width: calc(100vw - 24px);
+    display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    max-height: calc(100vh - 24px);
   }
-  #top h1 .dot {
-    width: 12px; height: 12px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    box-shadow: 0 0 12px var(--accent-2);
+  #left > * { pointer-events: auto; }
+
+  #searchWrap { position: relative; }
+  #search {
+    display: flex; align-items: center; gap: 8px; height: 50px; padding: 0 8px 0 16px; border-radius: 25px;
   }
-  #search { display: flex; gap: 8px; }
-  #search input {
-    flex: 1; min-width: 0; padding: 10px 12px; border-radius: 12px;
-    border: 1px solid var(--line); background: rgba(10, 3, 22, .6); color: var(--text); font: inherit;
+  #search svg { width: 20px; height: 20px; flex: none; fill: var(--muted); }
+  #q {
+    flex: 1; min-width: 0; height: 100%; border: 0; background: none; color: var(--text); font: inherit; font-size: 16px;
+    outline: none;
   }
-  #search input::placeholder { color: var(--muted); }
-  #search input:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-  button {
-    font: inherit; color: var(--text); cursor: pointer; border-radius: 12px;
-    border: 1px solid var(--line); background: var(--accent-soft); padding: 10px 12px;
+  #q::placeholder { color: var(--muted); }
+  #q::-webkit-search-cancel-button { display: none; }
+  #clear { width: 34px; height: 34px; border-radius: 50%; color: var(--muted); font-size: 20px; line-height: 1; }
+  #clear:hover { background: var(--accent-soft); }
+  #sugg {
+    position: absolute; left: 0; right: 0; top: 56px; border-radius: 18px; overflow: hidden; padding: 6px 0; margin: 0;
+    list-style: none; z-index: 5;
   }
-  button:hover { background: rgba(168, 85, 247, .32); }
-  button.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; font-weight: 600; }
-  #toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  #sugg li { display: flex; gap: 12px; align-items: center; padding: 9px 16px; cursor: pointer; }
+  #sugg li:hover, #sugg li.sel { background: var(--accent-soft); }
+  #sugg .ic {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--accent-soft); display: grid; place-items: center; flex: none;
+  }
+  #sugg .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #sugg .s { font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #sugg li > div:last-child { min-width: 0; }
+
+  #chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; margin: -2px; }
+  #chips::-webkit-scrollbar { display: none; }
   .chip {
-    display: inline-flex; align-items: center; gap: 6px; padding: 7px 11px; border-radius: 999px;
-    border: 1px solid var(--line); background: transparent; font-size: 13px; color: var(--muted);
+    flex: none; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 13px; border-radius: 17px;
+    font-size: 13.5px; font-weight: 500; color: var(--muted);
   }
-  .chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); border-color: var(--accent); }
-  #status { margin-top: 10px; font-size: 12.5px; color: var(--muted); min-height: 1.4em; }
+  .chip[aria-pressed="true"] { color: #fff; background: linear-gradient(135deg, rgba(168,85,247,.85), rgba(217,70,239,.8)); border-color: transparent; }
+
+  #status {
+    align-self: flex-start; padding: 5px 12px; border-radius: 14px; font-size: 12.5px; color: var(--muted);
+  }
   #status.err { color: #ffb3c1; }
 
-  /* HUD – kolik mám jet */
-  #hud {
-    left: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); padding: 12px 14px;
-    display: flex; align-items: center; gap: 14px;
+  /* ---------- karta místa / trasy / navigace ---------- */
+  #sheet { border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+  #sheet .grab { display: none; }
+  #sheetBody { padding: 16px; overflow-y: auto; }
+  .ttl { font-size: 21px; font-weight: 700; line-height: 1.2; margin: 0; }
+  .sub { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
+  .row { display: flex; gap: 10px; margin-top: 14px; }
+  .btn {
+    flex: 1; height: 46px; border-radius: 23px; font-weight: 600; background: var(--accent-soft);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px;
   }
-  .sign {
-    width: 74px; height: 74px; border-radius: 50%; flex: none;
-    background: #fff; color: #1a0b2e; border: 8px solid var(--accent-2);
-    display: grid; place-items: center; font-weight: 800; font-size: 26px; letter-spacing: -1px;
-    box-shadow: 0 0 0 2px rgba(255,255,255,.15), 0 0 18px rgba(217, 70, 239, .5);
+  .btn:hover { background: rgba(168, 85, 247, .34); }
+  .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; }
+  .btn.primary:hover { filter: brightness(1.1); }
+  .btn.danger { background: rgba(255, 77, 109, .22); color: #ffc2cd; flex: none; }
+  .x {
+    float: right; width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--muted);
+    font-size: 17px; line-height: 1; margin: -2px -2px 6px 10px;
   }
-  .sign.unknown { color: #8b7aa8; }
-  #speedBox { min-width: 96px; }
-  #speed { font-size: 34px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
-  #speed small { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 4px; }
-  #hud .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; max-width: 170px; }
-  #hud.over { border-color: var(--danger); box-shadow: 0 0 0 2px var(--danger), 0 10px 30px rgba(255, 77, 109, .4); }
-  #hud.over #speed { color: var(--danger); }
+  .big { font-size: 30px; font-weight: 800; letter-spacing: -.5px; line-height: 1.1; }
+  .big small { font-size: 15px; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 8px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .badge { padding: 4px 10px; border-radius: 12px; background: var(--accent-soft); font-size: 13px; }
+  .badge.warn { background: rgba(217, 70, 239, .28); color: #fbd5ff; font-weight: 600; }
+  #steps { list-style: none; margin: 14px -16px -16px; padding: 0; border-top: 1px solid var(--line); }
+  #steps li { display: flex; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+  #steps li:last-child { border-bottom: 0; }
+  #steps .ar { width: 30px; text-align: center; font-size: 20px; flex: none; color: #e2c4ff; }
+  #steps .d { margin-left: auto; color: var(--muted); font-size: 13px; white-space: nowrap; padding-left: 8px; }
+  .navTop { display: flex; gap: 14px; align-items: center; }
+  .navTop .ar {
+    width: 58px; height: 58px; border-radius: 16px; flex: none; display: grid; place-items: center; font-size: 34px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  }
+  .navTop .dist { font-size: 26px; font-weight: 800; line-height: 1.1; }
+  .navTop .ins { color: #e9dcff; margin-top: 2px; }
 
-  /* upozornění na radar */
-  #alert {
-    top: 12px; left: 50%; transform: translate(-50%, -160%); transition: transform .3s;
-    padding: 10px 16px; border-color: var(--danger); background: rgba(70, 8, 40, .95);
-    font-weight: 700; white-space: nowrap; z-index: 1100;
-  }
-  #alert.show { transform: translate(-50%, 0); }
+  /* ---------- plovoucí tlačítka ---------- */
+  #fabs { position: fixed; z-index: 1000; right: 12px; bottom: calc(28px + var(--safe-b)); display: flex; flex-direction: column; gap: 10px; }
+  .fab { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; }
+  .fab svg { width: 22px; height: 22px; fill: #e2c4ff; }
+  .fab.on { background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+  .fab.on svg { fill: #fff; }
+  .zoom { border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; }
+  .zoom button { width: 48px; height: 44px; font-size: 22px; color: #e2c4ff; }
+  .zoom button:hover, .fab:hover { background-color: rgba(168, 85, 247, .3); }
+  .zoom button + button { border-top: 1px solid var(--line); }
 
-  /* legenda */
-  #legend { right: 12px; bottom: calc(28px + env(safe-area-inset-bottom)); width: 230px; font-size: 13px; }
-  #legend summary { cursor: pointer; padding: 10px 12px; font-weight: 600; list-style: none; }
-  #legend summary::-webkit-details-marker { display: none; }
-  #legend summary::after { content: "▾"; float: right; color: var(--muted); }
-  #legend[open] summary::after { content: "▴"; }
-  #legend .body { padding: 0 12px 12px; }
-  #legend h3 { margin: 10px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
-  #legend ul { list-style: none; margin: 0; padding: 0; }
-  #legend li { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
-  #legend li b { margin-left: auto; }
+  #layers {
+    position: fixed; z-index: 1001; right: 72px; bottom: calc(28px + var(--safe-b)); width: 270px; border-radius: 22px; padding: 14px;
+    max-height: calc(100vh - 60px); overflow-y: auto;
+  }
+  #layers h3 { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+  #layers h3:not(:first-child) { margin-top: 14px; }
+  .types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .types button { font-size: 12.5px; color: var(--muted); }
+  .types .th { display: block; height: 54px; border-radius: 12px; border: 2px solid transparent; margin-bottom: 4px; }
+  .types button[aria-pressed="true"] { color: #fff; font-weight: 600; }
+  .types button[aria-pressed="true"] .th { border-color: var(--accent-2); box-shadow: 0 0 12px rgba(217, 70, 239, .5); }
+  .th.purple { background: linear-gradient(135deg, #1a0b2e 40%, #5b21b6 41% 46%, #2a1050 47%); }
+  .th.light { background: linear-gradient(135deg, #f1ecf7 40%, #fff 41% 46%, #d9f0d3 47%); }
+  .th.sat { background: linear-gradient(135deg, #1f3d2a 40%, #6b6f55 41% 46%, #24465e 47%); }
+  #layers ul { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  #layers li { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+  #layers li b { margin-left: auto; }
   .sw { width: 22px; height: 5px; border-radius: 3px; flex: none; }
 
-  /* značky v mapě */
+  /* ---------- rychlost a limit ---------- */
+  #hud {
+    position: fixed; z-index: 999; left: 12px; bottom: calc(28px + var(--safe-b)); padding: 10px 16px 10px 10px; border-radius: 40px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .sign {
+    width: 60px; height: 60px; border-radius: 50%; flex: none; background: #fff; color: #1a0b2e;
+    border: 7px solid var(--accent-2); display: grid; place-items: center; font-weight: 800; font-size: 21px; letter-spacing: -1px;
+    box-shadow: 0 0 16px rgba(217, 70, 239, .5);
+  }
+  .sign.unknown { color: #8b7aa8; }
+  #speed { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  #speedU { font-size: 11px; color: var(--muted); }
+  #hud.over { border-color: var(--danger); box-shadow: 0 0 0 2px var(--danger), 0 8px 28px rgba(255, 77, 109, .45); }
+  #hud.over #speed { color: var(--danger); }
+
+  #alert {
+    position: fixed; z-index: 1100; top: 12px; left: 50%; transform: translate(-50%, -20px); opacity: 0; visibility: hidden; transition: transform .3s, opacity .3s, visibility .3s;
+    padding: 10px 18px; border-radius: 22px; border-color: var(--danger); background: rgba(80, 10, 46, .94);
+    font-weight: 700; white-space: nowrap;
+  }
+  #alert.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
+
+  /* ---------- značky v mapě ---------- */
   .radar {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #f0abfc, #a21caf 70%);
+    width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #f0abfc, #a21caf 70%);
     border: 2px solid #fff; display: grid; place-items: center;
     box-shadow: 0 0 0 4px rgba(217, 70, 239, .28), 0 2px 8px rgba(0,0,0,.6);
   }
   .radar svg { width: 16px; height: 16px; fill: #fff; }
-  .me {
-    width: 20px; height: 20px; border-radius: 50%; background: #c084fc; border: 3px solid #fff;
-    box-shadow: 0 0 0 8px rgba(192, 132, 252, .3);
-  }
+  .me { width: 22px; height: 22px; border-radius: 50%; background: #a855f7; border: 3px solid #fff; box-shadow: 0 0 0 8px rgba(168, 85, 247, .3), 0 2px 6px rgba(0,0,0,.5); }
+  .pin { width: 34px; height: 44px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
   .leaflet-popup-content-wrapper, .leaflet-popup-tip, .leaflet-tooltip {
-    background: var(--panel-solid); color: var(--text); border: 1px solid var(--line);
-    box-shadow: 0 8px 24px rgba(8, 2, 20, .6);
+    background: var(--panel-solid); color: var(--text); border: 1px solid var(--line); box-shadow: var(--shadow);
   }
-  .leaflet-tooltip { border-radius: 8px; font-weight: 700; }
+  .leaflet-popup-content-wrapper { border-radius: 16px; }
+  .leaflet-tooltip { border-radius: 10px; font-weight: 700; }
   .leaflet-tooltip::before { display: none; }
   .leaflet-popup-content { margin: 12px 14px; font-size: 14px; }
   .leaflet-popup-content b { color: #e9b8ff; }
   .leaflet-container a.leaflet-popup-close-button { color: var(--muted); }
-  .leaflet-bar a, .leaflet-bar a:hover {
-    background: var(--panel-solid); color: var(--text); border-color: var(--line);
-  }
-  .leaflet-control-attribution {
-    background: rgba(18, 7, 31, .75) !important; color: var(--muted) !important; font-size: 10px;
-  }
+  .leaflet-control-attribution { background: rgba(18, 7, 31, .6) !important; color: var(--muted) !important; font-size: 10px; }
   .leaflet-control-attribution a { color: #d8b4fe !important; }
 
+  /* ---------- telefon: spodní vysouvací karta ---------- */
   @media (max-width: 640px) {
-    #legend { display: none; }
-    #hud { right: 12px; }
-    .leaflet-control-zoom { display: none; }
-    #alert { top: auto; bottom: calc(126px + env(safe-area-inset-bottom)); transform: translate(-50%, 300%); }
+    #left { max-height: none; }
+    #sheet {
+      position: fixed; left: 0; right: 0; bottom: 0; border-radius: 22px 22px 0 0; border-bottom: 0;
+      max-height: 52vh; padding-bottom: var(--safe-b);
+    }
+    #sheet .grab { display: block; width: 38px; height: 5px; border-radius: 3px; background: rgba(196,160,255,.4); margin: 8px auto 0; flex: none; }
+    #sheetBody { padding-top: 10px; }
+    #fabs, #hud { bottom: calc(var(--sheet-h) + 28px + var(--safe-b)); transition: bottom .2s; }
+    #layers { right: 12px; left: 12px; width: auto; bottom: calc(28px + var(--safe-b)); z-index: 1200; }
+    .zoom { display: none; }
+    #alert { top: 154px; }
   }
 </style>
 </head>
 <body>
 <div id="map"></div>
 
-<div id="top" class="panel">
-  <h1><span class="dot"></span>Fialová mapa</h1>
-  <form id="search">
-    <input id="q" type="search" placeholder="Hledat město nebo adresu…" autocomplete="off" aria-label="Hledat místo">
-    <button type="submit">Hledat</button>
-    <button type="button" id="locate" class="primary" title="Sledovat moji polohu">◎ Jedu</button>
-  </form>
-  <div id="toggles">
-    <button class="chip" id="tRadar" aria-pressed="true">📷 Radary</button>
-    <button class="chip" id="tSpeed" aria-pressed="true">🚦 Rychlostní limity</button>
-    <button class="chip" id="tSound" aria-pressed="true">🔔 Zvuk</button>
+<div id="left">
+  <div id="searchWrap">
+    <form id="search" class="glass" role="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
+      <input id="q" type="search" placeholder="Hledat v mapě" autocomplete="off" aria-label="Hledat místo" enterkeyhint="search">
+      <button type="button" id="clear" aria-label="Smazat hledání" hidden>×</button>
+    </form>
+    <ul id="sugg" class="glass" hidden></ul>
   </div>
-  <div id="status" role="status"></div>
+  <div id="chips">
+    <button class="chip glass" id="tRadar" aria-pressed="true">📷 Radary</button>
+    <button class="chip glass" id="tSpeed" aria-pressed="true">🚦 Limity</button>
+    <button class="chip glass" id="tSound" aria-pressed="true">🔔 Zvuk</button>
+  </div>
+  <div id="status" class="glass" role="status" hidden></div>
+  <section id="sheet" class="glass" hidden>
+    <div class="grab"></div>
+    <div id="sheetBody"></div>
+  </section>
 </div>
 
-<div id="alert" class="panel" role="alert"></div>
+<div id="alert" class="glass" role="alert"></div>
 
-<div id="hud" class="panel">
+<div id="hud" class="glass" hidden>
   <div class="sign unknown" id="limit" title="Povolená rychlost">–</div>
-  <div id="speedBox">
-    <div id="speed">–<small>km/h</small></div>
-    <div class="lbl" id="hudLbl">Zapni „Jedu“ a uvidíš svou rychlost a limit.</div>
-  </div>
+  <div><div id="speed">–</div><div id="speedU">km/h</div></div>
 </div>
 
-<details id="legend" class="panel" open>
-  <summary>Legenda</summary>
-  <div class="body">
-    <h3>Limity na silnicích</h3>
-    <ul id="legSpeed"></ul>
-    <h3>Obecné limity v ČR</h3>
-    <ul>
-      <li>V obci <b>50</b></li>
-      <li>Mimo obec <b>90</b></li>
-      <li>Silnice pro motorová vozidla <b>110</b></li>
-      <li>Dálnice <b>130</b></li>
-      <li>Dálnice v obci <b>80</b></li>
-      <li>Obytná zóna <b>20</b></li>
-    </ul>
+<div id="layers" class="glass" hidden>
+  <h3>Typ mapy</h3>
+  <div class="types">
+    <button data-type="purple"><span class="th purple"></span>Fialová</button>
+    <button data-type="light"><span class="th light"></span>Světlá</button>
+    <button data-type="sat"><span class="th sat"></span>Satelitní</button>
   </div>
-</details>
+  <h3>Limity na silnicích</h3>
+  <ul id="legSpeed"></ul>
+  <h3>Obecné limity v ČR</h3>
+  <ul>
+    <li>V obci <b>50</b></li>
+    <li>Mimo obec <b>90</b></li>
+    <li>Silnice pro motorová vozidla <b>110</b></li>
+    <li>Dálnice <b>130</b></li>
+    <li>Dálnice v obci <b>80</b></li>
+    <li>Obytná zóna <b>20</b></li>
+  </ul>
+</div>
+
+<div id="fabs">
+  <button class="fab glass" id="layersBtn" aria-label="Vrstvy a legenda" title="Vrstvy a legenda">
+    <svg viewBox="0 0 24 24"><path d="m12 2 10 5.5L12 13 2 7.5 12 2zm-7.9 9.6L12 16l7.9-4.4L22 12.8 12 18.3 2 12.8l2.1-1.2zm0 4.6L12 20.6l7.9-4.4 2.1 1.2-10 5.5-10-5.5 2.1-1.2z"/></svg>
+  </button>
+  <div class="zoom glass">
+    <button id="zin" aria-label="Přiblížit">+</button>
+    <button id="zout" aria-label="Oddálit">−</button>
+  </div>
+  <button class="fab glass" id="locate" aria-label="Moje poloha" title="Moje poloha">
+    <svg viewBox="0 0 24 24"><path d="M21 3 3 10.5v1l6.8 2.7L12.5 21h1L21 3z"/></svg>
+  </button>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
@@ -199,14 +286,9 @@
   const $ = id => document.getElementById(id);
 
   // ---------- nastavení ----------
-  const RADAR_MIN_ZOOM = 9;      // od jakého přiblížení načítat radary
-  const SPEED_MIN_ZOOM = 13;     // od jakého přiblížení načítat limity
-  const RADAR_WARN_M = 600;      // vzdálenost pro upozornění na radar
-  const ROAD_SNAP_M = 35;        // jak daleko od silnice ještě bereme její limit
-  const OVERPASS = [
-    'https://overpass-api.de/api/interpreter',
-    'https://overpass.kumi.systems/api/interpreter',
-  ];
+  const RADAR_MIN_ZOOM = 9, SPEED_MIN_ZOOM = 13;
+  const RADAR_WARN_M = 600, ROAD_SNAP_M = 35, OFF_ROUTE_M = 80;
+  const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
   const BUCKETS = [
     { max: 30,  color: '#34d399', label: 'do 30 km/h' },
     { max: 50,  color: '#fde047', label: '40–50 km/h' },
@@ -216,47 +298,85 @@
   ];
   const IMPLICIT = { 'CZ:urban': 50, 'CZ:rural': 90, 'CZ:trunk': 110, 'CZ:motorway': 130,
                      'CZ:living_street': 20, 'CZ:pedestrian_zone': 20, 'walk': 20 };
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch { /* bez úložiště */ } },
+  };
 
   $('legSpeed').innerHTML = BUCKETS.map(b =>
     `<li><span class="sw" style="background:${b.color}"></span>${b.label}</li>`).join('') +
     `<li><span class="radar" style="width:18px;height:18px;border-width:1px;box-shadow:none"></span>Radar / měření rychlosti</li>`;
 
-  // ---------- mapa ----------
+  // ---------- mapa a podklady ----------
   const map = L.map('map', { preferCanvas: true, zoomControl: false }).setView([49.82, 15.47], 8);
-  L.control.zoom({ position: 'topright' }).addTo(map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd', maxZoom: 20,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  }).addTo(map);
+  map.attributionControl.setPrefix(false);
+  const OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+  const bases = {
+    purple: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      { subdomains: 'abcd', maxZoom: 20, className: 'tint', attribution: OSM + ' &copy; <a href="https://carto.com/attributions">CARTO</a>' }),
+    light: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      { subdomains: 'abcd', maxZoom: 20, attribution: OSM + ' &copy; <a href="https://carto.com/attributions">CARTO</a>' }),
+    sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 19, attribution: 'Snímky &copy; Esri, Maxar, Earthstar Geographics · data ' + OSM }),
+  };
+  let baseType = null;
+  function setBase(t) {
+    if (!bases[t]) t = 'purple';
+    if (baseType) bases[baseType].remove();
+    bases[t].addTo(map).bringToBack();
+    baseType = t; store.set('mapType', t);
+    document.querySelectorAll('.types button').forEach(b => b.setAttribute('aria-pressed', b.dataset.type === t));
+  }
+  setBase(store.get('mapType') || 'purple');
+  document.querySelectorAll('.types button').forEach(b => b.addEventListener('click', () => setBase(b.dataset.type)));
 
   const speedLayer = L.layerGroup().addTo(map);
+  const routeLayer = L.layerGroup().addTo(map);
   const radarLayer = L.layerGroup().addTo(map);
 
   const radarIcon = L.divIcon({
     className: '', iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -14],
     html: '<div class="radar"><svg viewBox="0 0 24 24"><path d="M9 4 7.2 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.2L15 4H9zm3 4.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg></div>',
   });
+  const pinIcon = L.divIcon({
+    className: '', iconSize: [34, 44], iconAnchor: [17, 42],
+    html: '<svg class="pin" viewBox="0 0 34 44"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c084fc"/><stop offset="1" stop-color="#c026d3"/></linearGradient></defs><path d="M17 1C8.2 1 1 8 1 16.8 1 28.5 17 43 17 43s16-14.500 16-26.200C33 8 25.800 1 17 1z" fill="url(#pg)" stroke="#fff" stroke-width="2"/><circle cx="17" cy="17" r="6" fill="#fff"/></svg>',
+  });
 
-  // ---------- data ----------
-  const radars = new Map();   // id -> {lat, lon, limit}
-  const roads = new Map();    // id -> {pts:[[lat,lon]...], limit, name}
-  let loaded = { radar: null, speed: null };   // naposledy načtené oblasti (L.LatLngBounds)
-  let ctrl = null, timer = null;
-
+  // ---------- pomocné funkce ----------
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const on = id => $(id).getAttribute('aria-pressed') === 'true';
+  const colorFor = limit => BUCKETS.find(b => limit <= b.max).color;
   function setStatus(text, err) {
-    $('status').textContent = text;
+    $('status').textContent = text || '';
+    $('status').hidden = !text;
     $('status').classList.toggle('err', !!err);
   }
-
   function parseLimit(v) {
     if (!v) return null;
     if (IMPLICIT[v] != null) return IMPLICIT[v];
     const m = /^(\d+(?:\.\d+)?)\s*(mph)?$/.exec(v.trim());
-    if (!m) return null;
-    return Math.round(m[2] ? m[1] * 1.609 : +m[1]);
+    return m ? Math.round(m[2] ? m[1] * 1.609 : +m[1]) : null;
   }
-  const colorFor = limit => BUCKETS.find(b => limit <= b.max).color;
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  function dist(a, b, c, d) {
+    const R = 6371000, r = Math.PI / 180;
+    const x = (d - b) * r * Math.cos((a + c) * r / 2), y = (c - a) * r;
+    return Math.sqrt(x * x + y * y) * R;
+  }
+  function distToSeg(p, a, b) {
+    const k = Math.cos(p[0] * Math.PI / 180);
+    const px = p[1] * k, py = p[0], ax = a[1] * k, ay = a[0], bx = b[1] * k, by = b[0];
+    const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy;
+    const t = l2 ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l2)) : 0;
+    return Math.hypot(px - ax - t * dx, py - ay - t * dy) * 111320;
+  }
+  const fmtDist = m => m < 1000 ? `${Math.max(10, Math.round(m / 10) * 10)} m`
+    : `${(m / 1000).toFixed(m < 100000 ? 1 : 0).replace('.', ',')} km`;
+  function fmtDur(s) {
+    const min = Math.max(1, Math.round(s / 60));
+    return min < 60 ? `${min} min` : `${Math.floor(min / 60)} h ${min % 60} min`;
+  }
+  const fmtClock = d => d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
 
   async function overpass(query, signal) {
     let lastErr;
@@ -266,27 +386,57 @@
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return await r.json();
-      } catch (e) {
-        if (e.name === 'AbortError') throw e;
-        lastErr = e;
-      }
+      } catch (e) { if (e.name === 'AbortError') throw e; lastErr = e; }
     }
     throw lastErr;
   }
 
-  const on = id => $(id).getAttribute('aria-pressed') === 'true';
+  // ---------- radary a limity ----------
+  const radars = new Map();   // id -> {lat, lon, limit}
+  const roads = new Map();    // id -> {pts, limit, name}
+  const loaded = { radar: null, speed: null };
+  let ctrl = null, timer = null;
+
+  function addRadar(el) {
+    if (radars.has(el.id)) return;
+    const t = el.tags || {}, limit = parseLimit(t.maxspeed);
+    radars.set(el.id, { lat: el.lat, lon: el.lon, limit });
+    let html = '<b>📷 Radar – měření rychlosti</b>';
+    html += limit ? `<br>Měřený limit: <b>${limit} km/h</b>` : '<br>Limit není v datech uveden.';
+    if (t.name) html += '<br>' + esc(t.name);
+    if (t.description) html += '<br>' + esc(t.description);
+    L.marker([el.lat, el.lon], { icon: radarIcon, title: 'Radar' }).bindPopup(html).addTo(radarLayer);
+  }
+  function addRoad(el) {
+    if (roads.has(el.id)) return;
+    const limit = parseLimit(el.tags.maxspeed);
+    if (!limit || !el.geometry) return;
+    const pts = el.geometry.map(p => [p.lat, p.lon]);
+    const name = el.tags.name || el.tags.ref || '';
+    roads.set(el.id, { pts, limit, name });
+    L.polyline(pts, { color: colorFor(limit), weight: 3, opacity: .8 })
+      .bindTooltip(`${limit} km/h${name ? ' · ' + esc(name) : ''}`, { sticky: true })
+      .addTo(speedLayer);
+  }
+  function countInView() {
+    const b = map.getBounds(); let n = 0;
+    for (const r of radars.values()) if (b.contains([r.lat, r.lon])) n++;
+    return n;
+  }
+  function viewStatus() {
+    const z = map.getZoom();
+    if (!on('tRadar') && !on('tSpeed')) return setStatus('');
+    if (z < RADAR_MIN_ZOOM) return setStatus('Přibliž mapu, aby se zobrazily radary a limity.');
+    let s = on('tRadar') ? `Radarů v okolí: ${countInView()}` : '';
+    if (on('tSpeed') && z < SPEED_MIN_ZOOM) s += (s ? ' · ' : '') + 'pro limity přibliž ještě víc';
+    setStatus(s);
+  }
 
   async function refresh() {
     const z = map.getZoom(), view = map.getBounds();
     const needRadar = on('tRadar') && z >= RADAR_MIN_ZOOM && !(loaded.radar && loaded.radar.contains(view));
     const needSpeed = on('tSpeed') && z >= SPEED_MIN_ZOOM && !(loaded.speed && loaded.speed.contains(view));
-
-    if (!needRadar && !needSpeed) {
-      if (z < RADAR_MIN_ZOOM) setStatus('Přibliž mapu, aby se zobrazily radary.');
-      else if (z < SPEED_MIN_ZOOM && on('tSpeed')) setStatus(`Radarů v okolí: ${countInView()} · pro limity přibliž ještě víc.`);
-      else setStatus(`Radarů v okolí: ${countInView()}`);
-      return;
-    }
+    if (!needRadar && !needSpeed) return viewStatus();
 
     const area = view.pad(needSpeed ? 0.3 : 0.6);
     const bb = [area.getSouth(), area.getWest(), area.getNorth(), area.getEast()].map(n => n.toFixed(5)).join(',');
@@ -300,49 +450,17 @@
     setStatus('Načítám data…');
     try {
       const data = await overpass(q, ctrl.signal);
-      for (const el of data.elements) {
-        if (el.type === 'node' && !radars.has(el.id)) addRadar(el);
-        else if (el.type === 'way' && !roads.has(el.id)) addRoad(el);
-      }
+      for (const el of data.elements) el.type === 'node' ? addRadar(el) : el.type === 'way' && addRoad(el);
       if (needRadar) loaded.radar = area;
       if (needSpeed) loaded.speed = area;
-      setStatus(`Radarů v okolí: ${countInView()}` + (z < SPEED_MIN_ZOOM && on('tSpeed') ? ' · pro limity přibliž ještě víc.' : ''));
+      viewStatus();
       updateDrive();
     } catch (e) {
-      if (e.name !== 'AbortError') setStatus('Data se nepodařilo načíst. Zkus mapu posunout nebo to zopakuj za chvíli.', true);
+      if (e.name !== 'AbortError') setStatus('Radary a limity se nepodařilo načíst. Zkus to za chvíli znovu.', true);
     }
   }
-
-  function countInView() {
-    const b = map.getBounds(); let n = 0;
-    for (const r of radars.values()) if (b.contains([r.lat, r.lon])) n++;
-    return n;
-  }
-
-  function addRadar(el) {
-    const t = el.tags || {}, limit = parseLimit(t.maxspeed);
-    radars.set(el.id, { lat: el.lat, lon: el.lon, limit });
-    let html = '<b>📷 Radar – měření rychlosti</b>';
-    html += limit ? `<br>Měřený limit: <b>${limit} km/h</b>` : '<br>Limit není v datech uveden.';
-    if (t.name) html += '<br>' + esc(t.name);
-    if (t.description) html += '<br>' + esc(t.description);
-    L.marker([el.lat, el.lon], { icon: radarIcon, title: 'Radar' }).bindPopup(html).addTo(radarLayer);
-  }
-
-  function addRoad(el) {
-    const limit = parseLimit(el.tags.maxspeed);
-    if (!limit || !el.geometry) return;
-    const pts = el.geometry.map(p => [p.lat, p.lon]);
-    const name = el.tags.name || el.tags.ref || '';
-    roads.set(el.id, { pts, limit, name });
-    L.polyline(pts, { color: colorFor(limit), weight: 4, opacity: .85 })
-      .bindTooltip(`${limit} km/h${name ? ' · ' + esc(name) : ''}`, { sticky: true })
-      .addTo(speedLayer);
-  }
-
   map.on('moveend', () => { clearTimeout(timer); timer = setTimeout(refresh, 450); });
 
-  // ---------- přepínače ----------
   function toggle(id, fn) {
     $(id).addEventListener('click', () => {
       const v = !on(id);
@@ -354,51 +472,318 @@
   toggle('tSpeed', v => { v ? speedLayer.addTo(map) : speedLayer.remove(); refresh(); });
   toggle('tSound');
 
-  // ---------- hledání ----------
+  // ---------- plovoucí tlačítka ----------
+  $('zin').addEventListener('click', () => map.zoomIn());
+  $('zout').addEventListener('click', () => map.zoomOut());
+  $('layersBtn').addEventListener('click', e => { e.stopPropagation(); $('layers').hidden = !$('layers').hidden; });
+  $('layers').addEventListener('click', e => e.stopPropagation());
+  document.addEventListener('click', () => { $('layers').hidden = true; hideSugg(); });
+
+  // ---------- karta (místo / trasa / navigace) ----------
+  const sheet = $('sheet'), body = $('sheetBody');
+  new ResizeObserver(() => {
+    const mobile = matchMedia('(max-width: 640px)').matches;
+    document.documentElement.style.setProperty('--sheet-h', (mobile && !sheet.hidden ? sheet.offsetHeight : 0) + 'px');
+  }).observe(sheet);
+  function openSheet(html) { body.innerHTML = html; sheet.hidden = false; body.scrollTop = 0; }
+  function closeSheet() { sheet.hidden = true; document.documentElement.style.setProperty('--sheet-h', '0px'); }
+  body.addEventListener('click', e => {
+    const a = e.target.closest('[data-act]');
+    if (a) actions[a.dataset.act]();
+  });
+
+  let place = null, pin = null;      // vybrané místo {lat, lon, name, sub}
+  let route = null, nav = false, pickStart = false, lastReroute = 0;
+
+  function showPlace(p, fly) {
+    endRoute(true);
+    place = p;
+    if (pin) pin.remove();
+    pin = L.marker([p.lat, p.lon], { icon: pinIcon, zIndexOffset: 500 }).addTo(map);
+    if (fly) p.bounds ? map.fitBounds(p.bounds, { maxZoom: 16 }) : map.setView([p.lat, p.lon], 16);
+    const far = me ? `<div class="badges"><span class="badge">📍 ${fmtDist(dist(me.lat, me.lon, p.lat, p.lon))} vzdušnou čarou</span></div>` : '';
+    openSheet(`<button class="x" data-act="close" aria-label="Zavřít">×</button>
+      <h2 class="ttl">${esc(p.name)}</h2>${p.sub ? `<p class="sub">${esc(p.sub)}</p>` : ''}${far}
+      <div class="row"><button class="btn primary" data-act="route">🚗 Trasa</button></div>`);
+  }
+
+  const actions = {
+    close() { endRoute(true); place = null; if (pin) { pin.remove(); pin = null; } closeSheet(); },
+    route() { startRouting(); },
+    back() { endRoute(true); if (place) showPlace(place, false); },
+    go() { startNav(); },
+    stop() { nav = false; showRoute(); },
+  };
+
+  // ---------- hledání s našeptávačem ----------
+  const q = $('q'), sugg = $('sugg');
+  let hits = [], sel = -1, sTimer = null, sCtrl = null;
+  const KIND = { city: '🏙️', town: '🏙️', village: '🏡', hamlet: '🏡', house: '🏠', street: '🛣️', fuel: '⛽', restaurant: '🍽️',
+    cafe: '☕', hotel: '🏨', supermarket: '🛒', parking: '🅿️', station: '🚉', aerodrome: '✈️', hospital: '🏥', school: '🏫' };
+
+  function hideSugg() { sugg.hidden = true; sel = -1; }
+  function fromPhoton(f) {
+    const p = f.properties, [lon, lat] = f.geometry.coordinates;
+    const street = [p.street, p.housenumber].filter(Boolean).join(' ');
+    const name = p.name || street || p.city || 'Místo';
+    const sub = [p.name && street, p.city !== name && p.city, p.county !== p.city && p.county, p.country]
+      .filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).join(', ');
+    const e = p.extent;
+    return { lat, lon, name, sub, icon: KIND[p.osm_value] || KIND[p.type] || '📍',
+      bounds: e ? [[e[3], e[0]], [e[1], e[2]]] : null };
+  }
+  async function suggest() {
+    const text = q.value.trim();
+    if (text.length < 2) return hideSugg();
+    if (sCtrl) sCtrl.abort();
+    sCtrl = new AbortController();
+    const c = map.getCenter();
+    try {
+      const r = await fetch(`https://photon.komoot.io/api/?limit=6&lat=${c.lat.toFixed(3)}&lon=${c.lng.toFixed(3)}&q=${encodeURIComponent(text)}`, { signal: sCtrl.signal });
+      hits = (await r.json()).features.map(fromPhoton);
+      sel = -1;
+      sugg.innerHTML = hits.map((h, i) => `<li data-i="${i}" role="option"><span class="ic">${h.icon}</span>
+        <div><div class="t">${esc(h.name)}</div><div class="s">${esc(h.sub)}</div></div></li>`).join('');
+      sugg.hidden = !hits.length;
+    } catch { /* našeptávač není nutný, hledání funguje i bez něj */ }
+  }
+  function pick(h) { q.value = h.name; $('clear').hidden = false; hideSugg(); q.blur(); stopFollow(); showPlace(h, true); }
+
+  q.addEventListener('input', () => {
+    $('clear').hidden = !q.value;
+    clearTimeout(sTimer); sTimer = setTimeout(suggest, 250);
+  });
+  q.addEventListener('focus', () => { if (hits.length && q.value.trim().length > 1) sugg.hidden = false; });
+  q.addEventListener('click', e => e.stopPropagation());
+  q.addEventListener('keydown', e => {
+    if (sugg.hidden || !hits.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + hits.length) % hits.length;
+      [...sugg.children].forEach((li, i) => li.classList.toggle('sel', i === sel));
+    } else if (e.key === 'Escape') hideSugg();
+  });
+  sugg.addEventListener('click', e => {
+    e.stopPropagation();
+    const li = e.target.closest('li');
+    if (li) pick(hits[+li.dataset.i]);
+  });
+  $('clear').addEventListener('click', () => { q.value = ''; $('clear').hidden = true; hits = []; hideSugg(); q.focus(); });
   $('search').addEventListener('submit', async e => {
     e.preventDefault();
-    const q = $('q').value.trim();
-    if (!q) return;
+    clearTimeout(sTimer);
+    if (!sugg.hidden && hits.length) return pick(hits[Math.max(sel, 0)]);
+    const text = q.value.trim();
+    if (!text) return;
     setStatus('Hledám…');
     try {
-      const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=cs&q=' + encodeURIComponent(q));
-      const [hit] = await r.json();
-      if (!hit) return setStatus('Nic jsem nenašel. Zkus jiný název.', true);
-      stopFollow();
-      const [s, n, w, ea] = hit.boundingbox.map(Number);
-      map.fitBounds([[s, w], [n, ea]], { maxZoom: 15 });
+      const r = await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=cs&q=' + encodeURIComponent(text));
+      const [h] = await r.json();
+      if (!h) return setStatus('Nic jsem nenašel. Zkus jiný název.', true);
+      const [s, n, w, ea] = h.boundingbox.map(Number), parts = h.display_name.split(', ');
+      setStatus('');
+      pick({ lat: +h.lat, lon: +h.lon, name: parts[0], sub: parts.slice(1).join(', '), bounds: [[s, w], [n, ea]] });
     } catch { setStatus('Hledání se nepovedlo.', true); }
   });
 
-  // ---------- jízda: moje rychlost, limit, radar před sebou ----------
+  // klepnutí do mapy = špendlík s adresou (nebo výběr startu trasy)
+  map.on('click', async e => {
+    $('layers').hidden = true; hideSugg();
+    const { lat, lng } = e.latlng;
+    if (pickStart) { pickStart = false; return buildRoute({ lat, lon: lng }); }
+    if (nav) return;
+    showPlace({ lat, lon: lng, name: 'Označené místo', sub: `${lat.toFixed(5)}, ${lng.toFixed(5)}` }, false);
+    const mine = place;
+    try {
+      const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=cs&lat=${lat}&lon=${lng}`);
+      const d = await r.json();
+      if (place !== mine || !d.display_name) return;
+      const parts = d.display_name.split(', ');
+      showPlace({ lat, lon: lng, name: d.name || parts[0], sub: parts.slice(d.name ? 0 : 1).filter(x => x !== d.name).join(', ') }, false);
+    } catch { /* zůstanou souřadnice */ }
+  });
+
+  // ---------- trasa ----------
+  const ARROW = { left: '←', right: '→', 'slight left': '↖', 'slight right': '↗', 'sharp left': '↙', 'sharp right': '↘', straight: '↑', uturn: '↩' };
+  const SIDE = { left: 'vlevo', right: 'vpravo', 'slight left': 'mírně vlevo', 'slight right': 'mírně vpravo',
+    'sharp left': 'ostře vlevo', 'sharp right': 'ostře vpravo', straight: 'rovně', uturn: 'a otoč se' };
+  function instruction(s) {
+    const m = s.maneuver, mod = m.modifier, side = SIDE[mod] || '';
+    const onto = s.name ? ` na ${s.name}` : s.ref ? ` na ${s.ref}` : '';
+    let text, icon = ARROW[mod] || '↑';
+    switch (m.type) {
+      case 'depart': text = 'Vyjeď' + (s.name ? ` po ${s.name}` : ''); icon = '↑'; break;
+      case 'arrive': text = 'Cíl' + (mod === 'left' ? ' je vlevo' : mod === 'right' ? ' je vpravo' : ''); icon = '⚑'; break;
+      case 'roundabout': case 'rotary':
+        text = `Na kruhovém objezdu vyjeď ${m.exit || 1}. výjezdem${onto}`; icon = '⟳'; break;
+      case 'exit roundabout': case 'exit rotary': text = 'Sjeď z kruhového objezdu' + onto; break;
+      case 'merge': text = 'Zařaď se' + onto; break;
+      case 'on ramp': text = 'Najeď na nájezd' + onto; break;
+      case 'off ramp': text = `Sjeď sjezdem ${side}`.trim() + onto; break;
+      case 'fork': text = `Na rozcestí se drž ${side}`.trim() + onto; break;
+      case 'end of road': text = `Na konci silnice odboč ${side}`.trim() + onto; break;
+      case 'new name': case 'continue': case 'notification':
+        text = (mod === 'uturn' ? 'Otoč se' : mod && mod !== 'straight' ? `Drž se ${side}` : 'Pokračuj') + onto; break;
+      default:
+        text = (mod === 'uturn' ? 'Otoč se' : mod === 'straight' ? 'Pokračuj rovně' : `Odboč ${side}`) + onto;
+    }
+    return { text, icon };
+  }
+
+  async function startRouting() {
+    if (!place) return;
+    if (me) return buildRoute(me);
+    if (!navigator.geolocation) return askStart();
+    setStatus('Zjišťuji tvou polohu…');
+    navigator.geolocation.getCurrentPosition(pos => { onPos(pos); setStatus(''); buildRoute(me); }, askStart,
+      { enableHighAccuracy: true, timeout: 10000 });
+  }
+  function askStart() {
+    pickStart = true;
+    setStatus('Polohu neznám – klepni do mapy na místo, odkud vyjíždíš.');
+  }
+
+  async function buildRoute(from, quiet) {
+    const to = place;
+    if (!quiet) openSheet('<p class="sub" style="margin:0">Počítám trasu…</p>');
+    try {
+      const r = await fetch(`https://router.project-osrm.org/route/v1/driving/${from.lon},${from.lat};${to.lon},${to.lat}?overview=full&geometries=geojson&steps=true`);
+      const d = await r.json();
+      if (d.code !== 'Ok' || !d.routes.length) throw new Error(d.code);
+      if (place !== to) return;
+      const R = d.routes[0], pts = [], steps = [];
+      for (const s of R.legs[0].steps) {
+        const idx = Math.max(0, pts.length - 1);
+        s.geometry.coordinates.forEach(([lon, lat], i) => { if (i || !pts.length) pts.push([lat, lon]); });
+        steps.push({ idx, dist: s.distance, ...instruction(s) });
+      }
+      const cum = [0];
+      for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + dist(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]));
+      route = { pts, cum, steps, dist: R.distance, dur: R.duration, from, cams: null, near: 0 };
+      routeLayer.clearLayers();
+      L.polyline(pts, { color: '#fff', weight: 10, opacity: .9, interactive: false }).addTo(routeLayer);
+      L.polyline(pts, { color: '#a855f7', weight: 6, opacity: 1, interactive: false }).addTo(routeLayer);
+      setStatus('');
+      if (nav) updateNav(); else { showRoute(); fitRoute(); }
+      routeRadars(route);
+    } catch {
+      if (quiet) return;
+      openSheet(`<button class="x" data-act="back" aria-label="Zpět">×</button><h2 class="ttl">Trasu se nepodařilo najít</h2>
+        <p class="sub">Zkus jiné místo nebo to zopakuj za chvíli.</p>`);
+    }
+  }
+  function fitRoute() {
+    const mobile = matchMedia('(max-width: 640px)').matches;
+    map.fitBounds(L.latLngBounds(route.pts), mobile
+      ? { paddingTopLeft: [30, 130], paddingBottomRight: [30, sheet.offsetHeight + 30] }
+      : { paddingTopLeft: [430, 40], paddingBottomRight: [80, 40] });
+  }
+
+  // radary ležící přímo na trase
+  async function routeRadars(rt) {
+    const b = L.latLngBounds(rt.pts).pad(0.02);
+    const bb = [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].map(n => n.toFixed(5)).join(',');
+    try {
+      const data = await overpass(`[out:json][timeout:25];node["highway"="speed_camera"](${bb});out;`);
+      data.elements.forEach(addRadar);
+    } catch { /* spočítáme aspoň z toho, co už je načtené */ }
+    if (route !== rt) return;
+    let n = 0;
+    for (const r of radars.values()) {
+      if (!b.contains([r.lat, r.lon])) continue;
+      const p = [r.lat, r.lon];
+      for (let i = 1; i < rt.pts.length; i++) {
+        const a = rt.pts[i - 1];
+        if (Math.abs(a[0] - p[0]) > .01 || Math.abs(a[1] - p[1]) > .02) continue;
+        if (distToSeg(p, a, rt.pts[i]) < 40) { n++; break; }
+      }
+    }
+    rt.cams = n;
+    if (!nav) showRoute();
+  }
+
+  function showRoute() {
+    if (!route) return;
+    const cams = route.cams == null ? '<span class="badge">📷 hledám radary…</span>'
+      : route.cams ? `<span class="badge warn">📷 ${route.cams} ${route.cams === 1 ? 'radar' : route.cams < 5 ? 'radary' : 'radarů'} na trase</span>`
+      : '<span class="badge">📷 bez radarů na trase</span>';
+    openSheet(`<button class="x" data-act="back" aria-label="Zavřít trasu">×</button>
+      <div class="big">${fmtDur(route.dur)}<small>${fmtDist(route.dist)}</small></div>
+      <p class="sub">Do: ${esc(place.name)} · příjezd ${fmtClock(new Date(Date.now() + route.dur * 1000))}</p>
+      <div class="badges">${cams}</div>
+      <div class="row"><button class="btn primary" data-act="go">▲ Spustit navigaci</button></div>
+      <ol id="steps">${route.steps.map(s => `<li><span class="ar">${s.icon}</span><span>${esc(s.text)}</span>${s.dist ? `<span class="d">${fmtDist(s.dist)}</span>` : ''}</li>`).join('')}</ol>`);
+  }
+  function endRoute(keepPlace) {
+    route = null; nav = false; pickStart = false;
+    routeLayer.clearLayers();
+    if (!keepPlace) closeSheet();
+  }
+
+  // ---------- navigace ----------
+  function startNav() {
+    nav = true;
+    startWatch(); setFollow(true);
+    openSheet('<div id="navBox"></div>');
+    updateNav();
+  }
+  function updateNav() {
+    if (!nav || !route) return;
+    let idx = 0, off = Infinity;
+    if (me) {
+      const p = [me.lat, me.lon];
+      for (let i = 1; i < route.pts.length; i++) {
+        const a = route.pts[i - 1];
+        if (Math.abs(a[0] - p[0]) > .02 || Math.abs(a[1] - p[1]) > .04) continue;
+        const d = distToSeg(p, a, route.pts[i]);
+        if (d < off) { off = d; idx = i; }
+      }
+      if (off > OFF_ROUTE_M && Date.now() - lastReroute > 10000) {     // sjel jsi z trasy -> přepočet
+        lastReroute = Date.now();
+        setStatus('Přepočítávám trasu…');
+        return buildRoute(me, true);
+      }
+      if (off === Infinity) idx = route.near;
+      route.near = idx;
+    }
+    const total = route.cum[route.cum.length - 1];
+    const done = Math.min(total, route.cum[Math.max(0, idx - 1)] +
+      (me && off < OFF_ROUTE_M ? dist(route.pts[idx - 1][0], route.pts[idx - 1][1], me.lat, me.lon) : 0));
+    const left = total - done;
+    const box = $('navBox');
+    if (!box) return;
+    if (me && left < 30) {
+      nav = false; setFollow(false);
+      return openSheet(`<button class="x" data-act="close" aria-label="Zavřít">×</button><h2 class="ttl">⚑ Jsi v cíli</h2><p class="sub">${esc(place.name)}</p>`);
+    }
+    const next = route.steps.find(s => s.idx >= idx) || route.steps[route.steps.length - 1];
+    const toNext = Math.max(0, route.cum[next.idx] - done);
+    const secs = total ? route.dur * left / total : 0;
+    box.innerHTML = `<div class="navTop"><div class="ar">${next.icon}</div>
+        <div><div class="dist">${me ? fmtDist(toNext) : '…'}</div><div class="ins">${esc(next.text)}</div></div></div>
+      <div class="row" style="align-items:center">
+        <div style="flex:1"><b style="font-size:18px">${fmtClock(new Date(Date.now() + secs * 1000))}</b>
+          <span class="sub"> · ${fmtDur(secs)} · ${fmtDist(left)}</span></div>
+        <button class="btn danger" data-act="stop">Ukončit</button></div>
+      ${me ? '' : '<p class="sub">Čekám na signál polohy…</p>'}`;
+  }
+
+  // ---------- poloha, rychlost, limit, radar před sebou ----------
   let watchId = null, follow = false, me = null, meMarker = null, accCircle = null, prev = null;
   const warned = new Set();
 
-  function dist(a, b, c, d) {           // metry mezi dvěma body
-    const R = 6371000, r = Math.PI / 180;
-    const x = (d - b) * r * Math.cos((a + c) * r / 2), y = (c - a) * r;
-    return Math.sqrt(x * x + y * y) * R;
-  }
-  function distToSeg(p, a, b) {          // metry od bodu k úsečce (lokální rovinná aproximace)
-    const k = Math.cos(p[0] * Math.PI / 180);
-    const px = p[1] * k, py = p[0], ax = a[1] * k, ay = a[0], bx = b[1] * k, by = b[0];
-    const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy;
-    const t = l2 ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l2)) : 0;
-    return Math.hypot(px - ax - t * dx, py - ay - t * dy) * 111320;
-  }
   function nearestRoad(p) {
     let best = null, bd = ROAD_SNAP_M;
     for (const r of roads.values()) {
       for (let i = 1; i < r.pts.length; i++) {
-        const a = r.pts[i - 1], b = r.pts[i];
+        const a = r.pts[i - 1];
         if (Math.abs(a[0] - p[0]) > .01 || Math.abs(a[1] - p[1]) > .02) continue;
-        const d = distToSeg(p, a, b);
+        const d = distToSeg(p, a, r.pts[i]);
         if (d < bd) { bd = d; best = r; }
       }
     }
     return best;
   }
-
   function beep() {
     if (!on('tSound')) return;
     try {
@@ -414,20 +799,14 @@
 
   function updateDrive() {
     if (!me) return;
+    $('hud').hidden = false;
     const road = nearestRoad([me.lat, me.lon]);
-    const lim = $('limit');
-    lim.textContent = road ? road.limit : '–';
-    lim.classList.toggle('unknown', !road);
-
+    $('limit').textContent = road ? road.limit : '–';
+    $('limit').classList.toggle('unknown', !road);
     const kmh = me.speed != null ? Math.round(me.speed * 3.6) : null;
-    $('speed').firstChild.nodeValue = kmh != null ? kmh : '–';
-    const over = road && kmh != null && kmh > road.limit + 3;
-    $('hud').classList.toggle('over', !!over);
-    $('hudLbl').textContent = over ? `Zpomal! Limit je ${road.limit} km/h.`
-      : road ? (road.name || 'Limit na této silnici')
-      : map.getZoom() < SPEED_MIN_ZOOM ? 'Pro zjištění limitu přibliž mapu.' : 'Limit tu v datech není – platí obecná pravidla.';
+    $('speed').textContent = kmh != null ? kmh : '–';
+    $('hud').classList.toggle('over', !!(road && kmh != null && kmh > road.limit + 3));
 
-    // nejbližší radar
     let near = null, nd = RADAR_WARN_M;
     for (const [id, r] of radars) {
       const d = dist(me.lat, me.lon, r.lat, r.lon);
@@ -445,39 +824,40 @@
   function onPos(pos) {
     const c = pos.coords;
     let speed = c.speed;
-    if ((speed == null || isNaN(speed)) && prev) {       // dopočet rychlosti, když ji zařízení neposílá
+    if ((speed == null || isNaN(speed)) && prev) {       // dopočet, když zařízení rychlost neposílá
       const dt = (pos.timestamp - prev.t) / 1000;
       if (dt > .5 && dt < 15) speed = dist(prev.lat, prev.lon, c.latitude, c.longitude) / dt;
     }
     prev = { lat: c.latitude, lon: c.longitude, t: pos.timestamp };
     me = { lat: c.latitude, lon: c.longitude, speed: speed != null && !isNaN(speed) ? speed : null };
-
     const ll = [me.lat, me.lon];
     if (!meMarker) {
-      meMarker = L.marker(ll, { icon: L.divIcon({ className: '', html: '<div class="me"></div>', iconSize: [20, 20], iconAnchor: [10, 10] }), zIndexOffset: 1000 }).addTo(map);
+      meMarker = L.marker(ll, { icon: L.divIcon({ className: '', html: '<div class="me"></div>', iconSize: [22, 22], iconAnchor: [11, 11] }), zIndexOffset: 1000, interactive: false }).addTo(map);
       accCircle = L.circle(ll, { radius: c.accuracy, color: '#c084fc', weight: 1, fillOpacity: .08, interactive: false }).addTo(map);
     } else { meMarker.setLatLng(ll); accCircle.setLatLng(ll).setRadius(c.accuracy); }
-    if (follow) map.setView(ll, Math.max(map.getZoom(), 16), { animate: true });
+    if (follow) map.setView(ll, Math.max(map.getZoom(), nav ? 17 : 16), { animate: true });
     updateDrive();
+    updateNav();
   }
 
-  function stopFollow() {
-    follow = false;
-    $('locate').textContent = '◎ Jedu';
+  function setFollow(v) {
+    follow = v;
+    $('locate').classList.toggle('on', v);
+    if (v && me) map.setView([me.lat, me.lon], Math.max(map.getZoom(), 16));
+  }
+  const stopFollow = () => setFollow(false);
+  function startWatch() {
+    if (watchId != null || !navigator.geolocation) return;
+    watchId = navigator.geolocation.watchPosition(pos => { if (!me) setStatus(''); onPos(pos); }, err => {
+      setStatus(err.code === 1 ? 'Přístup k poloze byl zamítnut. Povol ho v nastavení prohlížeče.' : 'Polohu se nepodařilo zjistit.', true);
+      if (err.code === 1) { navigator.geolocation.clearWatch(watchId); watchId = null; stopFollow(); }
+    }, { enableHighAccuracy: true, maximumAge: 1000, timeout: 20000 });
   }
   $('locate').addEventListener('click', () => {
     if (!navigator.geolocation) return setStatus('Tento prohlížeč neumí zjistit polohu.', true);
     if (follow) return stopFollow();
-    follow = true;
-    $('locate').textContent = '◉ Sleduji';
-    if (me) map.setView([me.lat, me.lon], Math.max(map.getZoom(), 16));
-    if (watchId == null) {
-      setStatus('Zjišťuji polohu…');
-      watchId = navigator.geolocation.watchPosition(onPos, err => {
-        setStatus(err.code === 1 ? 'Přístup k poloze byl zamítnut. Povol ho v prohlížeči.' : 'Polohu se nepodařilo zjistit.', true);
-        if (err.code === 1) { navigator.geolocation.clearWatch(watchId); watchId = null; stopFollow(); }
-      }, { enableHighAccuracy: true, maximumAge: 1000, timeout: 20000 });
-    }
+    if (!me) setStatus('Zjišťuji polohu…');
+    startWatch(); setFollow(true);
   });
   map.on('dragstart', stopFollow);
 
