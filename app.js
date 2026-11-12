@@ -63,6 +63,7 @@
 
   let watchId = null, follow = false, me = null, meMarker = null, accCircle = null, prev = null, lastHeading = null;
   let autoCenter = true, overArmed = true;
+  let askTimer = null, locDenied = false;
   const warned = new Set();
 
   // ====================================================================
@@ -409,6 +410,7 @@
     },
     poi(i) { const p = cat && cat.items[+i]; if (p) showPlace(p, true); },
     catClose() { clearCat(); },
+    locRetry() { closeSheet(); askLocation(); },
   };
 
   // ====================================================================
@@ -888,13 +890,46 @@
     $('locate').classList.toggle('on', v);
     if (v && me) map.setView([me.lat, me.lon], Math.max(map.getZoom(), 16));
   }
+  function locHelp() {
+    openSheet(`<button class="x" data-act="close" aria-label="Zavřít">×</button>
+      <h2 class="ttl">📍 Poloha je vypnutá</h2>
+      <p class="sub">Prohlížeč stránce polohu nepovolil, proto se na ni ani nezeptal. Zapneš ji takhle:</p>
+      <ul class="info">
+        <li><span>1.</span><span>Máš-li stránku otevřenou uvnitř jiné aplikace, otevři ji přímo v <b>Safari</b> (ikona kompasu dole).</span></li>
+        <li><span>2.</span><span><b>Nastavení → Soukromí a zabezpečení → Polohové služby</b>: zapni je a u položky <b>Safari</b> zvol „Při používání aplikace“.</span></li>
+        <li><span>3.</span><span>V Safari klepni vlevo v adresním řádku na ikonu stránky → <b>Nastavení webu → Poloha → Povolit</b>.</span></li>
+        <li><span>4.</span><span>Vrať se sem a klepni na „Zkusit znovu“.</span></li>
+      </ul>
+      <div class="row"><button class="btn primary" data-act="locRetry">Zkusit znovu</button></div>`);
+  }
   function startWatch() {
-    if (watchId != null || !navigator.geolocation) return;
-    watchId = navigator.geolocation.watchPosition(pos => { if (!me) setStatus(''); onPos(pos); }, err => {
-      setStatus(err.code === 1 ? 'Přístup k poloze byl zamítnut. Povol ho v nastavení prohlížeče.' : 'Polohu se nepodařilo zjistit.', true);
-      if (err.code === 1) { navigator.geolocation.clearWatch(watchId); watchId = null; setFollow(false); }
+    if (watchId != null) return;
+    if (!navigator.geolocation) { $('locAsk').hidden = true; return setStatus('Tento prohlížeč neumí zjistit polohu.', true); }
+    clearTimeout(askTimer);
+    // když se prohlížeč do pár vteřin nezeptá ani nepošle polohu, nabídneme tlačítko – dotyk dotaz spolehlivě vyvolá
+    askTimer = setTimeout(() => { if (!me) $('locAsk').hidden = false; }, 3500);
+    watchId = navigator.geolocation.watchPosition(pos => {
+      if (!me) setStatus('');
+      $('locAsk').hidden = true; locDenied = false;
+      onPos(pos);
+    }, err => {
+      if (!me) $('locAsk').hidden = false;
+      if (err.code === 1) {
+        navigator.geolocation.clearWatch(watchId); watchId = null; setFollow(false);
+        setStatus('Poloha není povolená.', true);
+        if (locDenied || (!place && !route && !cat)) locHelp();
+        locDenied = true;
+      } else if (!me) setStatus('Polohu se zatím nedaří zjistit. Zkus to venku nebo zapni Wi‑Fi.', true);
     }, { enableHighAccuracy: true, maximumAge: 1000, timeout: 20000 });
   }
+  function askLocation() {
+    if (watchId != null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+    setStatus('Zjišťuji polohu…');
+    autoCenter = !place && !route;
+    startWatch();
+    if (watchId != null) setFollow(true);
+  }
+  $('locAsk').addEventListener('click', askLocation);
   $('locate').addEventListener('click', () => {
     if (!navigator.geolocation) return setStatus('Tento prohlížeč neumí zjistit polohu.', true);
     if (follow) return setFollow(false);

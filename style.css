@@ -76,6 +76,7 @@ a { color: #e2c4ff; }
 .chip[aria-pressed="false"] { color: var(--muted); }
 .chip[aria-pressed="true"] { color: #fff; background: linear-gradient(135deg, rgba(168,85,247,.9), rgba(217,70,239,.85)); border-color: transparent; }
 
+#locAsk { align-self: flex-start; height: 40px; font-weight: 600; }
 #status { align-self: flex-start; padding: 5px 12px; border-radius: 14px; font-size: 12.5px; color: var(--muted); max-width: 100%; }
 #status.err { color: #ffb3c1; }
 
