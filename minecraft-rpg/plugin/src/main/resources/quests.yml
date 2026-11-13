@@ -1,0 +1,250 @@
+# ============================================================================
+#  RPGCore - úkoly
+#
+#  giver:      id NPC z npcs.yml (u něj se úkol bere i odevzdává)
+#  requires:   úkoly, které musí být splněné předem
+#  objectives: KILL    {target: id moba nebo bosse, amount}
+#              COLLECT {item: id předmětu, amount}   (při odevzdání se odebere)
+#              TALK    {npc: id NPC}
+#              LEVEL   {amount: úroveň}
+#  rewards:    xp, coins, items {id: počet}
+# ============================================================================
+
+welcome:
+  name: "Nový začátek"
+  giver: elder
+  level: 1
+  description:
+    - "Seznam se s lidmi ve vesnici."
+    - "Začni u mistra Dalibora - zvol si třídu."
+  objectives:
+    - {type: TALK, npc: trainer, text: "Promluv si s mistrem Daliborem"}
+    - {type: TALK, npc: blacksmith, text: "Navštiv kováře Hromslava"}
+  rewards:
+    xp: 60
+    coins: 30
+    items: {health_potion_small: 3, hero_bread: 5}
+
+goblin_hunt:
+  name: "Goblinní mor"
+  giver: elder
+  level: 1
+  requires: [welcome]
+  description:
+    - "Goblini kradou zásoby z polí."
+    - "Zbav se jich a přines jejich uši jako důkaz."
+  objectives:
+    - {type: KILL, target: goblin, amount: 8}
+    - {type: COLLECT, item: goblin_ear, amount: 5}
+  rewards:
+    xp: 200
+    coins: 60
+    items: {iron_blade: 1}
+
+spider_nest:
+  name: "Pavoučí hnízdo"
+  giver: hunter
+  level: 4
+  description:
+    - "V lese se rozmnožili obří pavouci."
+    - "Jejich hedvábí se dobře prodává."
+  objectives:
+    - {type: KILL, target: giant_spider, amount: 6}
+    - {type: COLLECT, item: spider_silk, amount: 6}
+  rewards:
+    xp: 320
+    coins: 90
+    items: {adventurer_boots: 1}
+
+goblin_king:
+  name: "Pád Krále goblinů"
+  giver: elder
+  level: 8
+  requires: [goblin_hunt]
+  description:
+    - "Dokud žije jejich král, goblini nedají pokoj."
+    - "Vyvolej ho válečným rohem a poraz ho."
+  objectives:
+    - {type: KILL, target: goblin_king, amount: 1, text: "Poraz Krále goblinů"}
+  rewards:
+    xp: 900
+    coins: 300
+    items: {upgrade_stone: 2, summon_bone_lord: 1}
+
+bandit_trouble:
+  name: "Potíže na cestách"
+  giver: guard
+  level: 8
+  description:
+    - "Bandité přepadávají kupce."
+    - "Udělej s nimi pořádek."
+  objectives:
+    - {type: KILL, target: bandit, amount: 10}
+    - {type: KILL, target: bandit_archer, amount: 5}
+    - {type: COLLECT, item: bandit_insignia, amount: 6}
+  rewards:
+    xp: 1100
+    coins: 280
+    items: {knight_blade: 1, health_potion_medium: 3}
+
+restless_dead:
+  name: "Neklidní mrtví"
+  giver: guard
+  level: 12
+  requires: [bandit_trouble]
+  description:
+    - "Na starém hřbitově vstávají mrtví."
+  objectives:
+    - {type: KILL, target: skeleton_warrior, amount: 12}
+    - {type: COLLECT, item: bone_fragment, amount: 10}
+  rewards:
+    xp: 1800
+    coins: 400
+    items: {amulet_of_life: 1}
+
+bone_lord:
+  name: "Pán kostí"
+  giver: guard
+  level: 18
+  requires: [restless_dead]
+  description:
+    - "Mrtvé budí Pán kostí. Ukonči to."
+  objectives:
+    - {type: KILL, target: bone_lord, amount: 1, text: "Poraz Pána kostí"}
+  rewards:
+    xp: 3500
+    coins: 900
+    items: {upgrade_stone: 4, summon_frost_queen: 1}
+
+dark_cult:
+  name: "Temný kult"
+  giver: elder
+  level: 18
+  requires: [goblin_king]
+  description:
+    - "V horách se usadil kult uctívající prázdnotu."
+  objectives:
+    - {type: KILL, target: cultist, amount: 15}
+    - {type: COLLECT, item: cursed_cloth, amount: 8}
+  rewards:
+    xp: 3800
+    coins: 800
+    items: {magic_dust: 10, mana_potion_medium: 5}
+
+frozen_throne:
+  name: "Zamrzlý trůn"
+  giver: elder
+  level: 28
+  requires: [dark_cult, bone_lord]
+  description:
+    - "Zima letos nekončí. Může za to Ledová královna."
+  objectives:
+    - {type: KILL, target: frost_wraith, amount: 12}
+    - {type: KILL, target: frost_queen, amount: 1, text: "Poraz Ledovou královnu"}
+  rewards:
+    xp: 9000
+    coins: 2000
+    items: {summon_inferno_lord: 1, upgrade_stone: 5}
+
+hellgate:
+  name: "Brána pekel"
+  giver: elder
+  level: 38
+  requires: [frozen_throne]
+  description:
+    - "Po pádu královny se otevřela brána pekel."
+  objectives:
+    - {type: COLLECT, item: fire_core, amount: 8}
+    - {type: KILL, target: inferno_lord, amount: 1, text: "Poraz Pána pekel"}
+  rewards:
+    xp: 16000
+    coins: 3500
+    items: {summon_shadow_assassin: 1, greater_upgrade_stone: 2}
+
+contract:
+  name: "Kontrakt"
+  giver: guard
+  level: 48
+  requires: [hellgate]
+  description:
+    - "Někdo si na tebe najal vraha. Najdi ho dřív než on tebe."
+  objectives:
+    - {type: KILL, target: shadow_stalker, amount: 15}
+    - {type: KILL, target: shadow_assassin, amount: 1, text: "Poraz Stínového vraha"}
+  rewards:
+    xp: 26000
+    coins: 5000
+    items: {summon_stone_titan: 1, greater_upgrade_stone: 3}
+
+titan_awakens:
+  name: "Titán se probouzí"
+  giver: elder
+  level: 58
+  requires: [contract]
+  description:
+    - "Hory se třesou. Prastarý titán znovu kráčí."
+  objectives:
+    - {type: COLLECT, item: stone_heart, amount: 6}
+    - {type: KILL, target: stone_titan, amount: 1, text: "Poraz Kamenného titána"}
+  rewards:
+    xp: 40000
+    coins: 8000
+    items: {summon_lich: 1, mithril_ingot: 8}
+
+phylactery:
+  name: "Fylakterie"
+  giver: elder
+  level: 72
+  requires: [titan_awakens]
+  description:
+    - "Za vším stojí Lich. Znič ho i s jeho fylakterií."
+  objectives:
+    - {type: KILL, target: lich_acolyte, amount: 20}
+    - {type: KILL, target: lich, amount: 1, text: "Poraz Liche"}
+  rewards:
+    xp: 70000
+    coins: 14000
+    items: {summon_void_lord: 1, greater_upgrade_stone: 5}
+
+into_the_void:
+  name: "Do prázdnoty"
+  giver: elder
+  level: 90
+  requires: [phylactery]
+  description:
+    - "Lich byl jen služebník. Jeho pán čeká za trhlinou."
+  objectives:
+    - {type: LEVEL, amount: 95}
+    - {type: KILL, target: void_lord, amount: 1, text: "Poraz Pána prázdnoty"}
+  rewards:
+    xp: 150000
+    coins: 50000
+    items: {void_shard: 10, ancient_tome: 3}
+
+# ---- opakovatelné úkoly ----
+daily_pelts:
+  name: "Kožešiny pro Zoru"
+  giver: hunter
+  level: 5
+  repeatable: true
+  description:
+    - "Zora vždycky vykoupí pár kožešin navíc."
+  objectives:
+    - {type: COLLECT, item: wolf_pelt, amount: 8}
+  rewards:
+    xp: 250
+    coins: 120
+
+daily_patrol:
+  name: "Hlídka"
+  giver: guard
+  level: 10
+  repeatable: true
+  description:
+    - "Pročisti okolí od banditů."
+  objectives:
+    - {type: KILL, target: bandit, amount: 15}
+  rewards:
+    xp: 600
+    coins: 200
+    items: {health_potion_medium: 2}

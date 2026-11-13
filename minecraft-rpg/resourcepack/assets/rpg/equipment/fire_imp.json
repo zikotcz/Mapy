@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "rpg:fire_imp"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "rpg:fire_imp"
+      }
+    ]
+  }
+}

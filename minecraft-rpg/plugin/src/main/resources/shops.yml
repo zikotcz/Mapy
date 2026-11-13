@@ -1,0 +1,120 @@
+# ============================================================================
+#  RPGCore - obchody a recepty kováře
+#
+#  shops:   item = id z items.yml nebo vanilla materiál (ARROW, BREAD...)
+#           Hráč může v obchodě prodávat: klikne na předmět ve svém inventáři
+#           (výkupní cena = `sell` v items.yml).
+#  recipes: ingredients {id: počet}, coins = cena práce, level = potřebná úroveň
+# ============================================================================
+
+shops:
+  general:
+    title: "Kupec Bořek"
+    items:
+      - {item: training_sword, price: 25}
+      - {item: rusty_dagger, price: 25}
+      - {item: apprentice_wand, price: 25}
+      - {item: hunter_bow, price: 25}
+      - {item: ARROW, price: 12, amount: 16}
+      - {item: adventurer_helmet, price: 40}
+      - {item: adventurer_chestplate, price: 70}
+      - {item: adventurer_leggings, price: 55}
+      - {item: adventurer_boots, price: 35}
+      - {item: hero_bread, price: 8, amount: 4}
+      - {item: scroll_teleport, price: 40}
+      - {item: steel_ingot, price: 40}
+      - {item: enchanted_leather, price: 40}
+      - {item: magic_dust, price: 30}
+      - {item: upgrade_stone, price: 150}
+      - {item: scroll_reset, price: 1000}
+      - {item: summon_goblin_king, price: 200}
+  potions:
+    title: "Alchymistka Mira"
+    items:
+      - {item: health_potion_small, price: 15}
+      - {item: health_potion_medium, price: 60}
+      - {item: health_potion_large, price: 250}
+      - {item: mana_potion_small, price: 15}
+      - {item: mana_potion_medium, price: 60}
+      - {item: mana_potion_large, price: 250}
+      - {item: elixir_strength, price: 180}
+      - {item: elixir_wisdom, price: 180}
+      - {item: elixir_swiftness, price: 180}
+      - {item: elixir_iron, price: 180}
+
+recipes:
+  # ---- sety úrovně 10 ----
+  knight_helmet: {result: knight_helmet, level: 10, coins: 80, ingredients: {steel_ingot: 4, bandit_insignia: 2}}
+  knight_chestplate: {result: knight_chestplate, level: 10, coins: 140, ingredients: {steel_ingot: 8, bandit_insignia: 3}}
+  knight_leggings: {result: knight_leggings, level: 10, coins: 110, ingredients: {steel_ingot: 6, bandit_insignia: 2}}
+  knight_boots: {result: knight_boots, level: 10, coins: 70, ingredients: {steel_ingot: 3, bandit_insignia: 1}}
+  apprentice_helmet: {result: apprentice_helmet, level: 10, coins: 80, ingredients: {magic_dust: 4, spider_silk: 4}}
+  apprentice_chestplate: {result: apprentice_chestplate, level: 10, coins: 140, ingredients: {magic_dust: 8, spider_silk: 8}}
+  apprentice_leggings: {result: apprentice_leggings, level: 10, coins: 110, ingredients: {magic_dust: 6, spider_silk: 6}}
+  apprentice_boots: {result: apprentice_boots, level: 10, coins: 70, ingredients: {magic_dust: 3, spider_silk: 3}}
+  ranger_helmet: {result: ranger_helmet, level: 10, coins: 80, ingredients: {enchanted_leather: 3, wolf_pelt: 3}}
+  ranger_chestplate: {result: ranger_chestplate, level: 10, coins: 140, ingredients: {enchanted_leather: 6, wolf_pelt: 6}}
+  ranger_leggings: {result: ranger_leggings, level: 10, coins: 110, ingredients: {enchanted_leather: 5, wolf_pelt: 4}}
+  ranger_boots: {result: ranger_boots, level: 10, coins: 70, ingredients: {enchanted_leather: 2, wolf_pelt: 3}}
+  shadow_helmet: {result: shadow_helmet, level: 10, coins: 80, ingredients: {enchanted_leather: 3, spider_silk: 4}}
+  shadow_chestplate: {result: shadow_chestplate, level: 10, coins: 140, ingredients: {enchanted_leather: 6, spider_silk: 8}}
+  shadow_leggings: {result: shadow_leggings, level: 10, coins: 110, ingredients: {enchanted_leather: 5, spider_silk: 6}}
+  shadow_boots: {result: shadow_boots, level: 10, coins: 70, ingredients: {enchanted_leather: 2, spider_silk: 3}}
+
+  # ---- sety úrovně 30 ----
+  paladin_helmet: {result: paladin_helmet, level: 30, coins: 500, ingredients: {steel_ingot: 10, frost_crystal: 3, soul_bone_lord: 1}}
+  paladin_chestplate: {result: paladin_chestplate, level: 30, coins: 900, ingredients: {steel_ingot: 18, frost_crystal: 5, soul_bone_lord: 1}}
+  paladin_leggings: {result: paladin_leggings, level: 30, coins: 700, ingredients: {steel_ingot: 14, frost_crystal: 4, soul_bone_lord: 1}}
+  paladin_boots: {result: paladin_boots, level: 30, coins: 450, ingredients: {steel_ingot: 8, frost_crystal: 2, soul_bone_lord: 1}}
+  archmage_helmet: {result: archmage_helmet, level: 30, coins: 500, ingredients: {cursed_cloth: 8, magic_dust: 12, soul_bone_lord: 1}}
+  archmage_chestplate: {result: archmage_chestplate, level: 30, coins: 900, ingredients: {cursed_cloth: 14, magic_dust: 20, soul_bone_lord: 1}}
+  archmage_leggings: {result: archmage_leggings, level: 30, coins: 700, ingredients: {cursed_cloth: 10, magic_dust: 16, soul_bone_lord: 1}}
+  archmage_boots: {result: archmage_boots, level: 30, coins: 450, ingredients: {cursed_cloth: 6, magic_dust: 10, soul_bone_lord: 1}}
+  windrunner_helmet: {result: windrunner_helmet, level: 30, coins: 500, ingredients: {enchanted_leather: 10, frost_crystal: 3, soul_bone_lord: 1}}
+  windrunner_chestplate: {result: windrunner_chestplate, level: 30, coins: 900, ingredients: {enchanted_leather: 18, frost_crystal: 5, soul_bone_lord: 1}}
+  windrunner_leggings: {result: windrunner_leggings, level: 30, coins: 700, ingredients: {enchanted_leather: 14, frost_crystal: 4, soul_bone_lord: 1}}
+  windrunner_boots: {result: windrunner_boots, level: 30, coins: 450, ingredients: {enchanted_leather: 8, frost_crystal: 2, soul_bone_lord: 1}}
+  assassin_helmet: {result: assassin_helmet, level: 30, coins: 500, ingredients: {enchanted_leather: 10, cursed_cloth: 6, soul_bone_lord: 1}}
+  assassin_chestplate: {result: assassin_chestplate, level: 30, coins: 900, ingredients: {enchanted_leather: 18, cursed_cloth: 10, soul_bone_lord: 1}}
+  assassin_leggings: {result: assassin_leggings, level: 30, coins: 700, ingredients: {enchanted_leather: 14, cursed_cloth: 8, soul_bone_lord: 1}}
+  assassin_boots: {result: assassin_boots, level: 30, coins: 450, ingredients: {enchanted_leather: 8, cursed_cloth: 4, soul_bone_lord: 1}}
+
+  # ---- sety z bossů ----
+  frost_helmet: {result: frost_helmet, level: 45, coins: 1500, ingredients: {frost_crystal: 12, mithril_ingot: 4, soul_frost_queen: 1}}
+  frost_chestplate: {result: frost_chestplate, level: 45, coins: 2600, ingredients: {frost_crystal: 20, mithril_ingot: 8, soul_frost_queen: 1}}
+  frost_leggings: {result: frost_leggings, level: 45, coins: 2000, ingredients: {frost_crystal: 16, mithril_ingot: 6, soul_frost_queen: 1}}
+  frost_boots: {result: frost_boots, level: 45, coins: 1300, ingredients: {frost_crystal: 10, mithril_ingot: 3, soul_frost_queen: 1}}
+  inferno_helmet: {result: inferno_helmet, level: 60, coins: 3000, ingredients: {fire_core: 14, mithril_ingot: 6, soul_inferno_lord: 1}}
+  inferno_chestplate: {result: inferno_chestplate, level: 60, coins: 5200, ingredients: {fire_core: 24, mithril_ingot: 10, soul_inferno_lord: 1}}
+  inferno_leggings: {result: inferno_leggings, level: 60, coins: 4000, ingredients: {fire_core: 18, mithril_ingot: 8, soul_inferno_lord: 1}}
+  inferno_boots: {result: inferno_boots, level: 60, coins: 2600, ingredients: {fire_core: 12, mithril_ingot: 5, soul_inferno_lord: 1}}
+  dragon_helmet: {result: dragon_helmet, level: 75, coins: 6000, ingredients: {dragon_scale: 10, ancient_rune: 4, soul_stone_titan: 1}}
+  dragon_chestplate: {result: dragon_chestplate, level: 75, coins: 10000, ingredients: {dragon_scale: 18, ancient_rune: 6, soul_stone_titan: 1}}
+  dragon_leggings: {result: dragon_leggings, level: 75, coins: 8000, ingredients: {dragon_scale: 14, ancient_rune: 5, soul_stone_titan: 1}}
+  dragon_boots: {result: dragon_boots, level: 75, coins: 5000, ingredients: {dragon_scale: 8, ancient_rune: 3, soul_stone_titan: 1}}
+  void_helmet: {result: void_helmet, level: 90, coins: 15000, ingredients: {void_shard: 10, ancient_rune: 8, soul_lich: 1}}
+  void_chestplate: {result: void_chestplate, level: 90, coins: 26000, ingredients: {void_shard: 18, ancient_rune: 12, soul_void_lord: 1}}
+  void_leggings: {result: void_leggings, level: 90, coins: 20000, ingredients: {void_shard: 14, ancient_rune: 10, soul_lich: 1}}
+  void_boots: {result: void_boots, level: 90, coins: 13000, ingredients: {void_shard: 8, ancient_rune: 6, soul_lich: 1}}
+
+  # ---- zbraně ----
+  flame_sword: {result: flame_sword, level: 20, coins: 400, ingredients: {steel_ingot: 6, fire_core: 2, soul_goblin_king: 1}}
+  fire_staff: {result: fire_staff, level: 12, coins: 200, ingredients: {magic_dust: 8, soul_goblin_king: 1}}
+  shadow_dagger: {result: shadow_dagger, level: 12, coins: 200, ingredients: {steel_ingot: 3, spider_silk: 6, soul_goblin_king: 1}}
+  elven_bow: {result: elven_bow, level: 15, coins: 250, ingredients: {enchanted_leather: 4, spider_silk: 8, soul_goblin_king: 1}}
+  venom_fang: {result: venom_fang, level: 28, coins: 700, ingredients: {steel_ingot: 6, spider_silk: 16, soul_bone_lord: 1}}
+  storm_bow: {result: storm_bow, level: 35, coins: 1200, ingredients: {enchanted_leather: 10, frost_crystal: 6, soul_frost_queen: 1}}
+  inferno_bow: {result: inferno_bow, level: 55, coins: 4000, ingredients: {fire_core: 16, mithril_ingot: 6, soul_inferno_lord: 1}}
+  nightfall: {result: nightfall, level: 80, coins: 12000, ingredients: {shadow_essence: 24, void_shard: 6, soul_shadow_assassin: 1, soul_lich: 1}}
+  dragon_slayer: {result: dragon_slayer, level: 75, coins: 12000, ingredients: {dragon_scale: 20, mithril_ingot: 12, soul_stone_titan: 1}}
+  dragon_bow: {result: dragon_bow, level: 80, coins: 12000, ingredients: {dragon_scale: 16, enchanted_leather: 20, soul_stone_titan: 1}}
+
+  # ---- doplňky a materiály ----
+  ring_of_wisdom: {result: ring_of_wisdom, level: 5, coins: 120, ingredients: {magic_dust: 4, steel_ingot: 1}}
+  ring_of_swiftness: {result: ring_of_swiftness, level: 5, coins: 120, ingredients: {wolf_pelt: 4, steel_ingot: 1}}
+  amulet_of_mana: {result: amulet_of_mana, level: 15, coins: 350, ingredients: {magic_dust: 12, cursed_cloth: 4}}
+  hunter_talisman: {result: hunter_talisman, level: 20, coins: 400, ingredients: {wolf_pelt: 10, bone_fragment: 10}}
+  berserker_belt: {result: berserker_belt, level: 30, coins: 700, ingredients: {enchanted_leather: 8, steel_ingot: 6, soul_bone_lord: 1}}
+  mithril_ingot: {result: mithril_ingot, level: 30, coins: 150, ingredients: {steel_ingot: 4, magic_dust: 4, frost_crystal: 1}}
+  greater_upgrade_stone: {result: greater_upgrade_stone, level: 40, coins: 500, ingredients: {upgrade_stone: 5, ancient_rune: 1}}
+  health_potion_large: {result: health_potion_large, amount: 3, level: 40, coins: 200, ingredients: {health_potion_medium: 3, fire_core: 1}}

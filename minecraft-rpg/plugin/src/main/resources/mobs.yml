@@ -1,0 +1,404 @@
+# ============================================================================
+#  RPGCore - vlastní moby
+#
+#  type:      základní entita (brnění je vidět jen na: ZOMBIE, HUSK, DROWNED,
+#             SKELETON, STRAY, BOGGED, WITHER_SKELETON, PIGLIN, ZOMBIFIED_PIGLIN)
+#  costume:   set z items.yml (zakryje celého moba vlastní texturou)
+#  weapon:    id předmětu z items.yml nebo vanilla materiál (BOW, IRON_SWORD...)
+#  natural:   true = nahrazuje přirozeně spawnuté moby stejného typu
+#  distance:  [od, do] bloků od spawnu světa, kde se mob přirozeně objevuje
+#  drops:     item, chance (%), min, max
+# ============================================================================
+
+goblin:
+  name: "Goblin"
+  type: ZOMBIE
+  level: 2
+  health: 30
+  damage: 4
+  speed: 1.15
+  scale: 0.8
+  costume: goblin
+  weapon: rusty_dagger
+  xp: 10
+  coins: [1, 4]
+  natural: true
+  distance: [0, 700]
+  weight: 10
+  drops:
+    - {item: goblin_ear, chance: 60}
+    - {item: rusty_dagger, chance: 2}
+    - {item: health_potion_small, chance: 5}
+
+goblin_archer:
+  name: "Goblin lučištník"
+  type: SKELETON
+  level: 4
+  health: 36
+  damage: 5
+  scale: 0.8
+  costume: goblin
+  weapon: BOW
+  xp: 14
+  coins: [2, 5]
+  natural: true
+  distance: [0, 700]
+  weight: 10
+  drops:
+    - {item: goblin_ear, chance: 50}
+    - {item: ARROW, chance: 60, min: 1, max: 4}
+    - {item: hunter_bow, chance: 2}
+
+giant_spider:
+  name: "Obří pavouk"
+  type: SPIDER
+  level: 6
+  health: 70
+  damage: 7
+  scale: 1.3
+  xp: 22
+  coins: [2, 6]
+  natural: true
+  distance: [0, 2000]
+  weight: 10
+  drops:
+    - {item: spider_silk, chance: 70, min: 1, max: 2}
+
+dire_wolf:
+  name: "Divoký vlk"
+  type: WOLF
+  level: 5
+  health: 60
+  damage: 7
+  speed: 1.1
+  scale: 1.2
+  aggressive: true
+  xp: 20
+  coins: [1, 4]
+  drops:
+    - {item: wolf_pelt, chance: 70}
+
+bandit:
+  name: "Bandita"
+  type: ZOMBIE
+  level: 9
+  health: 120
+  damage: 10
+  costume: bandit
+  weapon: iron_blade
+  xp: 34
+  coins: [5, 12]
+  natural: true
+  distance: [300, 1400]
+  weight: 10
+  drops:
+    - {item: bandit_insignia, chance: 45}
+    - {item: iron_blade, chance: 3}
+    - {item: health_potion_small, chance: 8}
+    - {item: upgrade_stone, chance: 1}
+
+bandit_archer:
+  name: "Bandita střelec"
+  type: SKELETON
+  level: 10
+  health: 110
+  damage: 11
+  costume: bandit
+  weapon: BOW
+  xp: 36
+  coins: [5, 12]
+  natural: true
+  distance: [300, 1400]
+  weight: 8
+  drops:
+    - {item: bandit_insignia, chance: 40}
+    - {item: ARROW, chance: 60, min: 2, max: 6}
+
+skeleton_warrior:
+  name: "Kostlivý válečník"
+  type: SKELETON
+  level: 13
+  health: 170
+  damage: 14
+  weapon: IRON_SWORD
+  xp: 48
+  coins: [6, 14]
+  natural: true
+  distance: [500, 2000]
+  weight: 8
+  drops:
+    - {item: bone_fragment, chance: 70, min: 1, max: 3}
+    - {item: steel_ingot, chance: 6}
+
+cultist:
+  name: "Kultista"
+  type: ZOMBIE
+  level: 18
+  health: 240
+  damage: 18
+  speed: 1.05
+  costume: cultist
+  weapon: shadow_dagger
+  xp: 70
+  coins: [8, 20]
+  natural: true
+  distance: [1000, 2600]
+  weight: 10
+  drops:
+    - {item: cursed_cloth, chance: 50}
+    - {item: magic_dust, chance: 25}
+    - {item: mana_potion_small, chance: 8}
+    - {item: upgrade_stone, chance: 2}
+
+cultist_archer:
+  name: "Kultista lovec"
+  type: SKELETON
+  level: 20
+  health: 220
+  damage: 20
+  costume: cultist
+  weapon: BOW
+  xp: 76
+  coins: [8, 20]
+  natural: true
+  distance: [1000, 2600]
+  weight: 8
+  drops:
+    - {item: cursed_cloth, chance: 45}
+    - {item: magic_dust, chance: 30}
+
+undead_knight:
+  name: "Nemrtvý rytíř"
+  type: ZOMBIE
+  level: 26
+  health: 420
+  damage: 26
+  speed: 0.95
+  scale: 1.1
+  costume: undead_knight
+  weapon: knight_blade
+  xp: 110
+  coins: [12, 28]
+  natural: true
+  distance: [1800, 3400]
+  weight: 10
+  drops:
+    - {item: steel_ingot, chance: 40}
+    - {item: bone_fragment, chance: 50, min: 1, max: 3}
+    - {item: enchanted_leather, chance: 10}
+    - {item: upgrade_stone, chance: 3}
+
+frost_wraith:
+  name: "Mrazivý přízrak"
+  type: STRAY
+  level: 32
+  health: 480
+  damage: 30
+  costume: frost_wraith
+  weapon: BOW
+  element: FROST
+  xp: 140
+  coins: [14, 32]
+  natural: true
+  distance: [0, 99999]
+  weight: 10
+  drops:
+    - {item: frost_crystal, chance: 35}
+    - {item: magic_dust, chance: 30}
+
+fire_imp:
+  name: "Ohnivý skřet"
+  type: ZOMBIE
+  level: 42
+  health: 520
+  damage: 36
+  speed: 1.3
+  scale: 0.7
+  costume: fire_imp
+  element: FIRE
+  fireproof: true
+  xp: 190
+  coins: [18, 40]
+  natural: true
+  distance: [2800, 4400]
+  weight: 8
+  drops:
+    - {item: fire_core, chance: 30}
+    - {item: magic_dust, chance: 30}
+
+inferno_guard:
+  name: "Strážce pekel"
+  type: WITHER_SKELETON
+  level: 48
+  health: 800
+  damage: 44
+  costume: inferno
+  weapon: flame_sword
+  element: FIRE
+  fireproof: true
+  xp: 240
+  coins: [22, 50]
+  natural: true
+  distance: [0, 99999]
+  weight: 10
+  drops:
+    - {item: fire_core, chance: 40}
+    - {item: steel_ingot, chance: 40, min: 1, max: 2}
+    - {item: upgrade_stone, chance: 5}
+
+shadow_stalker:
+  name: "Stínový slídil"
+  type: ZOMBIE
+  level: 55
+  health: 900
+  damage: 50
+  speed: 1.25
+  costume: shadow
+  weapon: shadow_dagger
+  element: SHADOW
+  xp: 300
+  coins: [26, 60]
+  natural: true
+  distance: [3400, 5000]
+  weight: 8
+  drops:
+    - {item: shadow_essence, chance: 35}
+    - {item: enchanted_leather, chance: 25}
+    - {item: greater_upgrade_stone, chance: 1}
+
+stone_sentinel:
+  name: "Kamenný strážce"
+  type: ZOMBIE
+  level: 62
+  health: 1600
+  damage: 58
+  speed: 0.8
+  scale: 1.25
+  costume: stone_titan
+  element: EARTH
+  xp: 380
+  coins: [30, 70]
+  natural: true
+  distance: [4000, 5600]
+  weight: 6
+  drops:
+    - {item: stone_heart, chance: 25}
+    - {item: mithril_ingot, chance: 20}
+    - {item: ancient_rune, chance: 5}
+
+lich_acolyte:
+  name: "Akolyta Liche"
+  type: SKELETON
+  level: 72
+  health: 1500
+  damage: 68
+  costume: lich
+  weapon: BOW
+  element: POISON
+  xp: 480
+  coins: [36, 80]
+  natural: true
+  distance: [4600, 99999]
+  weight: 8
+  drops:
+    - {item: ancient_rune, chance: 15}
+    - {item: cursed_cloth, chance: 50, min: 1, max: 2}
+    - {item: bone_fragment, chance: 60, min: 2, max: 4}
+    - {item: greater_upgrade_stone, chance: 2}
+
+dragon_guard:
+  name: "Dračí strážce"
+  type: ZOMBIE
+  level: 78
+  health: 2200
+  damage: 76
+  scale: 1.15
+  costume: dragon
+  weapon: storm_halberd
+  fireproof: true
+  xp: 560
+  coins: [40, 90]
+  natural: true
+  distance: [5200, 99999]
+  weight: 8
+  drops:
+    - {item: dragon_scale, chance: 20}
+    - {item: mithril_ingot, chance: 30}
+    - {item: greater_upgrade_stone, chance: 3}
+
+void_spawn:
+  name: "Zplozenec prázdnoty"
+  type: ENDERMAN
+  level: 88
+  health: 2600
+  damage: 88
+  element: VOID
+  xp: 680
+  coins: [50, 110]
+  drops:
+    - {item: void_shard, chance: 15}
+    - {item: shadow_essence, chance: 40}
+
+void_knight:
+  name: "Rytíř prázdnoty"
+  type: WITHER_SKELETON
+  level: 92
+  health: 3400
+  damage: 96
+  scale: 1.1
+  costume: void
+  weapon: void_edge
+  element: VOID
+  xp: 780
+  coins: [60, 130]
+  drops:
+    - {item: void_shard, chance: 25}
+    - {item: ancient_rune, chance: 25}
+    - {item: greater_upgrade_stone, chance: 5}
+
+# ---- poskoci bossů (nespawnují se sami) ----
+skeleton_minion:
+  name: "Vyvolaný kostlivec"
+  type: SKELETON
+  level: 18
+  health: 120
+  damage: 14
+  weapon: IRON_SWORD
+  xp: 0
+  coins: [0, 0]
+
+ice_shade:
+  name: "Ledový stín"
+  type: STRAY
+  level: 28
+  health: 200
+  damage: 20
+  costume: frost_wraith
+  weapon: IRON_SWORD
+  element: FROST
+  xp: 0
+  coins: [0, 0]
+
+shadow_clone:
+  name: "Stínový klon"
+  type: ZOMBIE
+  level: 50
+  health: 300
+  damage: 30
+  speed: 1.3
+  costume: shadow_assassin
+  weapon: shadow_dagger
+  element: SHADOW
+  xp: 0
+  coins: [0, 0]
+
+risen_dead:
+  name: "Povstalý mrtvý"
+  type: ZOMBIE
+  level: 70
+  health: 700
+  damage: 50
+  costume: undead_knight
+  weapon: IRON_SWORD
+  xp: 0
+  coins: [0, 0]

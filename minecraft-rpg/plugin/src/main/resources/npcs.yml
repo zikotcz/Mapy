@@ -1,0 +1,86 @@
+# ============================================================================
+#  RPGCore - šablony NPC
+#  Postav je příkazem:  /rpg npc spawn <id>   (objeví se tam, kde stojíš)
+#
+#  role:  QUEST       zadává a přijímá úkoly (quests.yml -> giver)
+#         SHOP        obchod (shop: id z shops.yml)
+#         BLACKSMITH  vylepšování a výroba
+#         TRAINER     výběr třídy a přehled dovedností
+#         HEALER      vyléčí život i manu
+#  skin:  textura z resource packu (assets/rpg/textures/entity/npc/<skin>.png)
+#         hotové: elder, merchant, blacksmith, trainer, healer, alchemist, guard, hunter
+# ============================================================================
+
+elder:
+  name: "Stařešina Radomír"
+  title: "Úkoly"
+  role: QUEST
+  skin: elder
+  lines:
+    - "Vítej, poutníku. Tahle země potřebuje hrdiny."
+    - "Zlo sílí. Každá ruka se hodí."
+
+guard:
+  name: "Kapitán Vojtěch"
+  title: "Úkoly stráže"
+  role: QUEST
+  skin: guard
+  lines:
+    - "Drž se cest, v lesích řádí bandité."
+    - "Stráž potřebuje schopné bojovníky."
+
+hunter:
+  name: "Lovkyně Zora"
+  title: "Lovecké úkoly"
+  role: QUEST
+  skin: hunter
+  lines:
+    - "Tiše... plašíš zvěř."
+    - "Kožešiny se vždycky hodí."
+
+merchant:
+  name: "Kupec Bořek"
+  title: "Obchod"
+  role: SHOP
+  shop: general
+  skin: merchant
+  lines:
+    - "Nejlepší zboží široko daleko!"
+    - "Co ti dnes nabídnu?"
+
+alchemist:
+  name: "Alchymistka Mira"
+  title: "Lektvary"
+  role: SHOP
+  shop: potions
+  skin: alchemist
+  lines:
+    - "Pozor, tenhle ještě bublá."
+    - "Lektvar denně a smrt se ti vyhne."
+
+blacksmith:
+  name: "Kovář Hromslav"
+  title: "Kovárna"
+  role: BLACKSMITH
+  skin: blacksmith
+  lines:
+    - "Dobrá ocel se neohýbá."
+    - "Dones materiál a něco z toho ukovám."
+
+trainer:
+  name: "Mistr Dalibor"
+  title: "Trenér tříd"
+  role: TRAINER
+  skin: trainer
+  lines:
+    - "Každý hrdina si musí zvolit cestu."
+    - "Trénink dělá mistra."
+
+healer:
+  name: "Léčitelka Ludmila"
+  title: "Léčitelka"
+  role: HEALER
+  skin: healer
+  lines:
+    - "Ukaž ty rány..."
+    - "Světlo tě uzdraví."

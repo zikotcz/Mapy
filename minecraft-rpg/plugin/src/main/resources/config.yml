@@ -1,0 +1,95 @@
+# ============================================================================
+#  RPGCore - hlavní nastavení
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+#  Resource pack
+#  mode: builtin = plugin sám pustí malý web server a pošle pack hráčům
+#                  (port musí být otevřený ven, stejně jako herní port)
+#        url     = pack hostuješ jinde (vyplň url níže)
+#        off     = pack se neposílá
+# ---------------------------------------------------------------------------
+resource-pack:
+  mode: builtin
+  port: 8163
+  # Adresa, přes kterou se hráči k serveru připojují (IP nebo doména).
+  # Prázdné = použije se adresa, kterou hráč zadal při připojení.
+  public-address: ""
+  # Pro mode: url - přímý odkaz na zip
+  url: ""
+  # true = bez packu hráč na server nesmí
+  required: false
+  prompt: "<gold>Tento server používá vlastní resource pack <gray>(předměty, brnění, bossové)."
+  # true = při každém startu se pack přepíše verzí z pluginu.
+  # Nastav false, pokud si upravuješ vlastní plugins/RPGCore/resourcepack.zip
+  use-bundled: true
+
+# ---------------------------------------------------------------------------
+#  Úrovně
+# ---------------------------------------------------------------------------
+leveling:
+  max-level: 100
+  # XP na další úroveň = base + factor * úroveň ^ exponent
+  xp-base: 60
+  xp-factor: 28
+  xp-exponent: 1.6
+  points-per-level: 3
+  # XP za obyčejné (nevlastní) nepřátelské moby
+  vanilla-mob-xp: 3
+
+# ---------------------------------------------------------------------------
+#  Boj
+# ---------------------------------------------------------------------------
+combat:
+  damage-indicators: true
+  # dovednosti a schopnosti zasahují i hráče (jen ve světech se zapnutým PvP)
+  skills-hit-players: false
+  # kolik % mincí hráč ztratí při smrti
+  death-coin-loss-percent: 5
+  # o kolik % zvýší staty každá úroveň vylepšení (+1 až +10)
+  upgrade-bonus-percent: 8
+
+# ---------------------------------------------------------------------------
+#  HUD (lišta nad hotbarem)
+# ---------------------------------------------------------------------------
+hud:
+  enabled: true
+  # ikony z resource packu; false = obyčejné znaky
+  custom-icons: true
+  # na kolik srdíček se přepočítá zdraví (20 = 10 srdcí)
+  health-scale: 20
+
+# ---------------------------------------------------------------------------
+#  Moby
+# ---------------------------------------------------------------------------
+mobs:
+  # nahrazování přirozeně spawnutých mobů vlastními
+  natural-spawn: true
+  # šance v % že se přirozený mob změní na vlastního
+  natural-chance: 70
+  # světy, kde se to děje (prázdné = všechny)
+  worlds: []
+
+# ---------------------------------------------------------------------------
+#  Bossové
+# ---------------------------------------------------------------------------
+bosses:
+  # boss zmizí, když u něj tolik sekund není žádný hráč
+  despawn-seconds: 90
+  # jak daleko smí boss od místa spawnu, než se vrátí
+  leash-range: 40
+  # oznámit spawn a porážku bosse celému serveru
+  broadcast: true
+  # svítící obrys bosse
+  glowing: true
+
+# ---------------------------------------------------------------------------
+#  Třídy a NPC
+# ---------------------------------------------------------------------------
+classes:
+  # cena za změnu třídy (první výběr je zdarma)
+  change-cost: 500
+
+npcs:
+  # cena léčení u léčitele = úroveň hráče * tato hodnota
+  heal-cost-per-level: 2

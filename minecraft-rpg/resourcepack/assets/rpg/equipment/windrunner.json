@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "rpg:windrunner"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "rpg:windrunner"
+      }
+    ]
+  }
+}

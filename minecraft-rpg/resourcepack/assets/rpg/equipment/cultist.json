@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "rpg:cultist"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "rpg:cultist"
+      }
+    ]
+  }
+}

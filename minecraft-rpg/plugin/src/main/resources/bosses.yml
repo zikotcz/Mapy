@@ -1,0 +1,286 @@
+# ============================================================================
+#  RPGCore - bossové
+#
+#  Každý boss je mob v kompletním kostýmu (set z items.yml), má boss bar,
+#  fáze podle zbývajícího zdraví a schopnosti s varováním (kruh na zemi).
+#
+#  Typy schopností:
+#    CHARGE    skok na cíl + úder            (damage)
+#    SLAM      úder do země kolem bosse       (damage, radius, delay)
+#    NOVA      velká vlna elementu            (damage, radius, delay, element)
+#    BOLT      střely na hráče                (damage, count, element)
+#    METEOR    dopad pod nohy hráčů           (damage, radius, count, delay, element)
+#    LIGHTNING blesk na hráče                 (damage, count, delay)
+#    TELEPORT  teleport za hráče + úder       (damage)
+#    PULL      přitáhne hráče k sobě          (radius)
+#    DRAIN     vysává život a léčí bosse      (damage, count)
+#    SUMMON    vyvolá poskoky                 (mob, count, max)
+#    HEAL      vyléčí část zdraví             (percent)
+#    CURSE     oslabí hráče v okolí           (radius, duration, element)
+#  cooldown je v sekundách, delay v ticích (20 = 1 s).
+# ============================================================================
+
+goblin_king:
+  name: "Král goblinů"
+  type: ZOMBIE
+  level: 10
+  health: 800
+  damage: 12
+  speed: 1.1
+  scale: 1.5
+  costume: goblin_king
+  weapon: war_axe
+  xp: 600
+  coins: 250
+  bar-color: GREEN
+  ability-interval: 5
+  abilities:
+    charge: {type: CHARGE, damage: 16, cooldown: 9}
+    goblins: {type: SUMMON, mob: goblin, count: 3, max: 6, cooldown: 22, message: "<green>Král goblinů svolává své poddané!"}
+    slam: {type: SLAM, damage: 20, radius: 5, delay: 25, element: EARTH, cooldown: 11}
+  phases:
+    - {below: 100, abilities: [charge, goblins]}
+    - {below: 50, abilities: [charge, goblins, slam], speed: 1.2, damage: 1.3, message: "<red>Král goblinů zuří!"}
+  loot:
+    - {item: soul_goblin_king, chance: 100}
+    - {item: goblin_ear, chance: 100, min: 3, max: 8}
+    - {item: war_axe, chance: 20}
+    - {item: ring_of_strength, chance: 12}
+    - {item: upgrade_stone, chance: 40, min: 1, max: 2}
+    - {item: xp_tome, chance: 25}
+
+bone_lord:
+  name: "Pán kostí"
+  type: SKELETON
+  level: 20
+  health: 2200
+  damage: 22
+  scale: 1.5
+  costume: bone_lord
+  weapon: knight_blade
+  xp: 1600
+  coins: 600
+  bar-color: WHITE
+  ability-interval: 4.5
+  abilities:
+    volley: {type: BOLT, damage: 18, count: 5, element: SHADOW, cooldown: 7}
+    spikes: {type: METEOR, damage: 26, radius: 3, count: 3, delay: 25, element: EARTH, cooldown: 10}
+    raise: {type: SUMMON, mob: skeleton_minion, count: 3, max: 6, cooldown: 24, message: "<gray>Kosti se dávají do pohybu..."}
+    curse: {type: CURSE, radius: 10, duration: 5, element: SHADOW, cooldown: 18}
+  phases:
+    - {below: 100, abilities: [volley, spikes]}
+    - {below: 60, abilities: [volley, spikes, raise], message: "<gray>Pán kostí probouzí mrtvé!"}
+    - {below: 25, abilities: [volley, spikes, raise, curse], speed: 1.2, damage: 1.35, message: "<dark_purple>Pán kostí se nevzdá bez boje!"}
+  loot:
+    - {item: soul_bone_lord, chance: 100}
+    - {item: bone_fragment, chance: 100, min: 4, max: 10}
+    - {item: guard_spear, chance: 18}
+    - {item: amulet_of_life, chance: 12}
+    - {item: steel_ingot, chance: 60, min: 2, max: 4}
+    - {item: upgrade_stone, chance: 50, min: 1, max: 3}
+
+frost_queen:
+  name: "Ledová královna"
+  type: STRAY
+  level: 30
+  health: 4200
+  damage: 30
+  scale: 1.4
+  costume: frost_queen
+  weapon: frost_blade
+  xp: 3200
+  coins: 1100
+  bar-color: BLUE
+  ability-interval: 4.5
+  abilities:
+    shards: {type: BOLT, damage: 26, count: 6, element: FROST, cooldown: 6}
+    nova: {type: NOVA, damage: 34, radius: 8, delay: 35, element: FROST, cooldown: 14}
+    blizzard: {type: METEOR, damage: 30, radius: 3.5, count: 5, delay: 25, element: FROST, cooldown: 11}
+    shades: {type: SUMMON, mob: ice_shade, count: 2, max: 4, cooldown: 26, message: "<aqua>Ze sněhu povstávají stíny..."}
+    pull: {type: PULL, radius: 14, cooldown: 16}
+  phases:
+    - {below: 100, abilities: [shards, blizzard]}
+    - {below: 65, abilities: [shards, blizzard, nova, shades], message: "<aqua>Vzduch tuhne mrazem!"}
+    - {below: 30, abilities: [shards, blizzard, nova, shades, pull], speed: 1.25, damage: 1.35, message: "<white>Ledová královna rozpoutala vánici!"}
+  loot:
+    - {item: soul_frost_queen, chance: 100}
+    - {item: frost_crystal, chance: 100, min: 3, max: 7}
+    - {item: frost_blade, chance: 15}
+    - {item: ice_staff, chance: 15}
+    - {item: frost_charm, chance: 8}
+    - {item: upgrade_stone, chance: 70, min: 2, max: 4}
+
+inferno_lord:
+  name: "Pán pekel"
+  type: WITHER_SKELETON
+  level: 40
+  health: 7000
+  damage: 42
+  scale: 1.5
+  costume: inferno_lord
+  weapon: flame_sword
+  fireproof: true
+  xp: 5500
+  coins: 1800
+  bar-color: RED
+  ability-interval: 4
+  abilities:
+    fireballs: {type: BOLT, damage: 36, count: 6, element: FIRE, cooldown: 6}
+    meteor: {type: METEOR, damage: 50, radius: 4, count: 4, delay: 30, element: FIRE, cooldown: 10}
+    ring: {type: NOVA, damage: 46, radius: 9, delay: 35, element: FIRE, cooldown: 14}
+    charge: {type: CHARGE, damage: 48, cooldown: 9}
+    imps: {type: SUMMON, mob: fire_imp, count: 3, max: 6, cooldown: 28}
+  phases:
+    - {below: 100, abilities: [fireballs, charge]}
+    - {below: 70, abilities: [fireballs, charge, meteor, imps], message: "<gold>Země praská žárem!"}
+    - {below: 35, abilities: [fireballs, charge, meteor, imps, ring], speed: 1.25, damage: 1.4, message: "<red>Pán pekel plane hněvem!"}
+  loot:
+    - {item: soul_inferno_lord, chance: 100}
+    - {item: fire_core, chance: 100, min: 3, max: 8}
+    - {item: thunder_blade, chance: 10}
+    - {item: storm_staff, chance: 10}
+    - {item: berserker_axe, chance: 15}
+    - {item: upgrade_stone, chance: 80, min: 2, max: 5}
+    - {item: greater_upgrade_stone, chance: 10}
+
+shadow_assassin:
+  name: "Stínový vrah"
+  type: ZOMBIE
+  level: 50
+  health: 9000
+  damage: 54
+  speed: 1.35
+  scale: 1.15
+  costume: shadow_assassin
+  weapon: phantom_blade
+  xp: 8000
+  coins: 2600
+  bar-color: PURPLE
+  ability-interval: 3.5
+  abilities:
+    blink: {type: TELEPORT, damage: 60, cooldown: 6}
+    daggers: {type: BOLT, damage: 42, count: 5, element: SHADOW, cooldown: 6}
+    clones: {type: SUMMON, mob: shadow_clone, count: 3, max: 6, cooldown: 22, message: "<dark_purple>Stíny se rozdělily..."}
+    darkness: {type: CURSE, radius: 14, duration: 6, element: SHADOW, cooldown: 16}
+    dance: {type: NOVA, damage: 58, radius: 6, delay: 20, element: SHADOW, cooldown: 12}
+  phases:
+    - {below: 100, abilities: [blink, daggers]}
+    - {below: 60, abilities: [blink, daggers, clones, darkness], message: "<dark_purple>Světlo pohasíná..."}
+    - {below: 25, abilities: [blink, daggers, clones, darkness, dance], speed: 1.2, damage: 1.45, message: "<red>Stínový vrah tančí se smrtí!"}
+  loot:
+    - {item: soul_shadow_assassin, chance: 100}
+    - {item: shadow_essence, chance: 100, min: 3, max: 8}
+    - {item: phantom_blade, chance: 12}
+    - {item: storm_halberd, chance: 12}
+    - {item: phoenix_feather, chance: 8}
+    - {item: greater_upgrade_stone, chance: 30, min: 1, max: 2}
+
+stone_titan:
+  name: "Kamenný titán"
+  type: ZOMBIE
+  level: 60
+  health: 16000
+  damage: 70
+  speed: 0.85
+  scale: 2.4
+  costume: stone_titan
+  xp: 12000
+  coins: 3800
+  bar-color: WHITE
+  ability-interval: 4.5
+  abilities:
+    slam: {type: SLAM, damage: 80, radius: 7, delay: 30, element: EARTH, cooldown: 8}
+    quake: {type: NOVA, damage: 90, radius: 12, delay: 45, element: EARTH, cooldown: 16}
+    boulders: {type: METEOR, damage: 85, radius: 4, count: 5, delay: 30, element: EARTH, cooldown: 10}
+    pull: {type: PULL, radius: 16, cooldown: 14}
+    sentinels: {type: SUMMON, mob: stone_sentinel, count: 2, max: 4, cooldown: 30}
+    mend: {type: HEAL, percent: 4, cooldown: 30, message: "<gray>Kámen srůstá..."}
+  phases:
+    - {below: 100, abilities: [slam, boulders]}
+    - {below: 65, abilities: [slam, boulders, pull, sentinels], message: "<gray>Titán se probouzí naplno!"}
+    - {below: 30, abilities: [slam, boulders, pull, sentinels, quake, mend], speed: 1.2, damage: 1.4, message: "<aqua>Runy na titánovi se rozzářily!"}
+  loot:
+    - {item: soul_stone_titan, chance: 100}
+    - {item: stone_heart, chance: 100, min: 2, max: 5}
+    - {item: mithril_ingot, chance: 100, min: 3, max: 6}
+    - {item: titan_hammer, chance: 14}
+    - {item: holy_avenger, chance: 10}
+    - {item: ancient_rune, chance: 50, min: 1, max: 3}
+    - {item: greater_upgrade_stone, chance: 45, min: 1, max: 3}
+
+lich:
+  name: "Lich"
+  type: SKELETON
+  level: 75
+  health: 24000
+  damage: 84
+  scale: 1.5
+  costume: lich
+  weapon: necro_staff
+  xp: 20000
+  coins: 6000
+  bar-color: GREEN
+  ability-interval: 3.5
+  abilities:
+    bolts: {type: BOLT, damage: 70, count: 7, element: POISON, cooldown: 5}
+    drain: {type: DRAIN, damage: 30, count: 6, cooldown: 12}
+    raise: {type: SUMMON, mob: risen_dead, count: 3, max: 6, cooldown: 24, message: "<green>Hroby se otevírají!"}
+    curse: {type: CURSE, radius: 16, duration: 7, element: POISON, cooldown: 15}
+    nova: {type: NOVA, damage: 100, radius: 10, delay: 35, element: POISON, cooldown: 14}
+    souls: {type: METEOR, damage: 95, radius: 3.5, count: 6, delay: 25, element: SHADOW, cooldown: 9}
+    teleport: {type: TELEPORT, damage: 80, cooldown: 14}
+  phases:
+    - {below: 100, abilities: [bolts, souls, curse]}
+    - {below: 70, abilities: [bolts, souls, curse, raise, drain], message: "<green>Lich se živí vaší životní silou!"}
+    - {below: 35, abilities: [bolts, souls, curse, raise, drain, nova, teleport], speed: 1.2, damage: 1.45, message: "<dark_green>Fylakterie praská - Lich zuří!"}
+  loot:
+    - {item: soul_lich, chance: 100}
+    - {item: ancient_rune, chance: 100, min: 2, max: 5}
+    - {item: necro_staff, chance: 14}
+    - {item: blood_reaper, chance: 10}
+    - {item: arcane_staff, chance: 8}
+    - {item: dragon_heart_amulet, chance: 6}
+    - {item: ancient_tome, chance: 40}
+    - {item: greater_upgrade_stone, chance: 60, min: 2, max: 4}
+
+void_lord:
+  name: "Pán prázdnoty"
+  type: WITHER_SKELETON
+  level: 95
+  health: 45000
+  damage: 115
+  speed: 1.1
+  scale: 2.0
+  costume: void_lord
+  weapon: void_edge
+  fireproof: true
+  xp: 50000
+  coins: 15000
+  bar-color: PURPLE
+  ability-interval: 3
+  abilities:
+    orbs: {type: BOLT, damage: 100, count: 8, element: VOID, cooldown: 5}
+    rift: {type: PULL, radius: 20, cooldown: 12}
+    collapse: {type: NOVA, damage: 150, radius: 12, delay: 40, element: VOID, cooldown: 13}
+    storm: {type: LIGHTNING, damage: 120, count: 6, delay: 20, cooldown: 9}
+    rain: {type: METEOR, damage: 130, radius: 4, count: 8, delay: 25, element: VOID, cooldown: 8}
+    blink: {type: TELEPORT, damage: 130, cooldown: 8}
+    knights: {type: SUMMON, mob: void_knight, count: 2, max: 4, cooldown: 30, message: "<dark_purple>Z trhliny vystupují rytíři prázdnoty!"}
+    drain: {type: DRAIN, damage: 45, count: 6, cooldown: 14}
+    curse: {type: CURSE, radius: 18, duration: 6, element: VOID, cooldown: 16}
+  phases:
+    - {below: 100, abilities: [orbs, rain, blink]}
+    - {below: 75, abilities: [orbs, rain, blink, rift, storm, knights], message: "<dark_purple>Realita se trhá..."}
+    - {below: 45, abilities: [orbs, rain, blink, rift, storm, knights, collapse, drain], speed: 1.15, damage: 1.3, message: "<light_purple>Prázdnota pohlcuje vše!"}
+    - {below: 15, abilities: [orbs, rain, blink, rift, storm, collapse, drain, curse], speed: 1.3, damage: 1.6, message: "<red><bold>PÁN PRÁZDNOTY UVOLNIL SVOU PRAVOU MOC!"}
+  loot:
+    - {item: soul_void_lord, chance: 100}
+    - {item: void_shard, chance: 100, min: 3, max: 7}
+    - {item: void_edge, chance: 8}
+    - {item: void_staff, chance: 8}
+    - {item: nightfall, chance: 8}
+    - {item: dragon_bow, chance: 8}
+    - {item: void_ring, chance: 6}
+    - {item: dragon_slayer, chance: 8}
+    - {item: ancient_tome, chance: 100, min: 1, max: 2}
+    - {item: greater_upgrade_stone, chance: 100, min: 3, max: 6}

@@ -1,0 +1,26 @@
+name: RPGCore
+version: '${version}'
+main: cz.rpgcore.RPGCore
+api-version: '1.21'
+description: RPG systém - vlastní předměty, třídy, bossové, NPC a úkoly
+author: zikotcz
+commands:
+  rpg:
+    description: Hlavní příkaz RPG
+    usage: /rpg help
+  quests:
+    description: Deník úkolů
+    aliases: [ukoly, questy]
+  class:
+    description: Výběr třídy
+    aliases: [trida]
+  stats:
+    description: Atributy postavy
+    aliases: [staty]
+  skills:
+    description: Dovednosti třídy
+    aliases: [dovednosti]
+permissions:
+  rpgcore.admin:
+    description: Správa RPG (předměty, bossové, NPC, spawnery)
+    default: op

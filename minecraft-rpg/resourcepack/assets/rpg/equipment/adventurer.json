@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "rpg:adventurer"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "rpg:adventurer"
+      }
+    ]
+  }
+}

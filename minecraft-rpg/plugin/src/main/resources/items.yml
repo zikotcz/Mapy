@@ -1,0 +1,1116 @@
+# ============================================================================
+#  RPGCore - předměty a sety brnění
+#  Z tohoto souboru čte plugin (staty, schopnosti) I generátor resource packu
+#  (tools/generate_pack.py - ikony a barvy). Po změně ikon/barev pusť generátor.
+#
+#  colors: [hlavní materiál, rukojeť/lem, drahokam/záře]
+#  Staty: damage, defense, health, mana, strength, vitality, intelligence,
+#         agility, crit_chance, crit_damage, speed, mana_regen, lifesteal
+#  Elementy: FIRE, FROST, LIGHTNING, SHADOW, HOLY, VOID, ARCANE, POISON, EARTH
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+#  SETY BRNĚNÍ - z každého setu vzniknou 4 předměty: <id>_helmet, <id>_chestplate,
+#  <id>_leggings, <id>_boots. Staty setu se rozdělí 20/40/25/15 %.
+#  costume: true = kostým pro moby a bosse (hráč ho nezíská).
+# ---------------------------------------------------------------------------
+sets:
+  adventurer:
+    name: "dobrodruha"
+    style: leather
+    colors: ["#9a6b3f", "#5c3d22", "#d8b35a"]
+    level: 1
+    rarity: COMMON
+    stats: {defense: 12, health: 10}
+    full-set: {health: 10}
+  knight:
+    name: "rytíře"
+    style: plate
+    colors: ["#b9c0cc", "#3b5fa8", "#e8c24a"]
+    level: 10
+    rarity: UNCOMMON
+    classes: [WARRIOR]
+    stats: {defense: 40, health: 40, strength: 6}
+    full-set: {defense: 10, health: 20}
+  apprentice:
+    name: "učně magie"
+    style: robe
+    colors: ["#4a63c9", "#2b3672", "#f0d060"]
+    level: 10
+    rarity: UNCOMMON
+    classes: [MAGE]
+    stats: {defense: 18, mana: 60, intelligence: 10}
+    full-set: {mana: 30, mana_regen: 1}
+  ranger:
+    name: "hraničáře"
+    style: leather
+    colors: ["#4f7a3a", "#6b4a2b", "#c9a86a"]
+    level: 10
+    rarity: UNCOMMON
+    classes: [ARCHER]
+    stats: {defense: 26, agility: 10, crit_chance: 4}
+    full-set: {agility: 5, speed: 5}
+  shadow:
+    name: "stínu"
+    style: leather
+    colors: ["#3a3a4a", "#1d1d28", "#a03ad0"]
+    level: 10
+    rarity: UNCOMMON
+    classes: [ROGUE]
+    stats: {defense: 24, agility: 8, crit_chance: 6}
+    full-set: {crit_damage: 15}
+  paladin:
+    name: "paladina"
+    style: plate
+    colors: ["#e6e1cf", "#c9a227", "#5ad0ff"]
+    level: 30
+    rarity: RARE
+    classes: [WARRIOR]
+    stats: {defense: 90, health: 120, strength: 14}
+    full-set: {defense: 25, health: 60}
+  archmage:
+    name: "arcimága"
+    style: robe
+    colors: ["#7a3fc0", "#3c1f66", "#5ae0ff"]
+    level: 30
+    rarity: RARE
+    classes: [MAGE]
+    stats: {defense: 45, mana: 160, intelligence: 28, mana_regen: 2}
+    full-set: {intelligence: 12, mana: 80}
+  windrunner:
+    name: "lovce větru"
+    style: leather
+    colors: ["#5aa8a0", "#2f5d58", "#f5f0c0"]
+    level: 30
+    rarity: RARE
+    classes: [ARCHER]
+    stats: {defense: 62, agility: 26, crit_chance: 8, health: 50}
+    full-set: {speed: 10, crit_damage: 20}
+  assassin:
+    name: "asasína"
+    style: leather
+    colors: ["#5a1f2a", "#241016", "#e03a3a"]
+    level: 30
+    rarity: RARE
+    classes: [ROGUE]
+    stats: {defense: 58, agility: 22, crit_chance: 12, health: 40}
+    full-set: {crit_damage: 30, lifesteal: 3}
+  frost:
+    name: "mrazu"
+    style: scale
+    colors: ["#8fd3f0", "#3f7fb0", "#ffffff"]
+    level: 45
+    rarity: EPIC
+    stats: {defense: 115, health: 150, intelligence: 18, strength: 18}
+    full-set: {defense: 30, mana: 80}
+  inferno:
+    name: "pekla"
+    style: plate
+    colors: ["#8a2a1a", "#3a1410", "#ff9a2a"]
+    level: 60
+    rarity: EPIC
+    stats: {defense: 150, health: 220, strength: 26, intelligence: 26}
+    full-set: {strength: 15, intelligence: 15}
+  dragon:
+    name: "draka"
+    style: scale
+    colors: ["#2f8a55", "#17452c", "#ffd24a"]
+    level: 75
+    rarity: LEGENDARY
+    stats: {defense: 200, health: 320, strength: 34, agility: 20, crit_chance: 8}
+    full-set: {health: 150, crit_damage: 30}
+  void:
+    name: "prázdnoty"
+    style: plate
+    colors: ["#2a1f45", "#120c22", "#c45aff"]
+    level: 90
+    rarity: MYTHIC
+    stats: {defense: 260, health: 420, strength: 40, intelligence: 40, agility: 25, crit_chance: 10}
+    full-set: {health: 200, mana: 200, lifesteal: 5}
+
+  # ---- kostýmy mobů ----
+  goblin:
+    costume: true
+    style: leather
+    colors: ["#7a5a36", "#4a3520", "#c9a86a"]
+    face: {type: skin, skin: "#6aa84f", eyes: "#ffe14a", ears: true}
+  bandit:
+    costume: true
+    style: leather
+    colors: ["#5a4a3a", "#2a2018", "#b03030"]
+    face: {type: mask, skin: "#c99a70", eyes: "#3a2a1a"}
+  cultist:
+    costume: true
+    style: robe
+    colors: ["#3a1a2a", "#1a0c14", "#e03a6a"]
+    face: {type: mask, skin: "#18101a", eyes: "#ff3a6a"}
+  undead_knight:
+    costume: true
+    style: plate
+    colors: ["#5a6068", "#2a2e34", "#5affc0"]
+    face: {type: visor, eyes: "#5affc0"}
+  frost_wraith:
+    costume: true
+    style: robe
+    colors: ["#a8d8f0", "#5a90b8", "#ffffff"]
+    face: {type: skull, skin: "#d8f0ff", eyes: "#3ad0ff"}
+  fire_imp:
+    costume: true
+    style: scale
+    colors: ["#c0401a", "#6a1a0a", "#ffd23a"]
+    face: {type: skin, skin: "#d0501a", eyes: "#fff03a", horns: "#3a1a0a"}
+
+  # ---- kostýmy bossů ----
+  goblin_king:
+    costume: true
+    style: plate
+    colors: ["#8a6a3a", "#5a3a1a", "#ffd23a"]
+    face: {type: skin, skin: "#5a9a3f", eyes: "#ff4a2a", ears: true, crown: "#ffd23a"}
+  bone_lord:
+    costume: true
+    style: plate
+    colors: ["#d8d2bc", "#6a6450", "#a03ad0"]
+    face: {type: skull, skin: "#ece6d0", eyes: "#c45aff", crown: "#6a6450"}
+  frost_queen:
+    costume: true
+    style: robe
+    colors: ["#bfe8ff", "#5aa0d8", "#ffffff"]
+    face: {type: skin, skin: "#cfe8f5", eyes: "#2a8aff", crown: "#e8f8ff", hair: "#f5fbff"}
+  inferno_lord:
+    costume: true
+    style: plate
+    colors: ["#3a1a14", "#1a0a08", "#ff7a1a"]
+    face: {type: visor, eyes: "#ffb01a", horns: "#1a0a08"}
+  shadow_assassin:
+    costume: true
+    style: leather
+    colors: ["#1a1a24", "#0a0a10", "#c43aff"]
+    face: {type: mask, skin: "#101018", eyes: "#e05aff"}
+  stone_titan:
+    costume: true
+    style: stone
+    colors: ["#7a7a78", "#4a4a48", "#3affc0"]
+    face: {type: golem, skin: "#8a8a86", eyes: "#3affc0"}
+  lich:
+    costume: true
+    style: robe
+    colors: ["#2a3a2a", "#101a10", "#7aff3a"]
+    face: {type: skull, skin: "#c8d8b8", eyes: "#7aff3a", crown: "#c9a227", hood: true}
+  void_lord:
+    costume: true
+    style: plate
+    colors: ["#1a1030", "#0a0618", "#d05aff"]
+    face: {type: visor, eyes: "#ff5aff", horns: "#d05aff", crown: "#d05aff"}
+
+# ---------------------------------------------------------------------------
+#  PŘEDMĚTY
+# ---------------------------------------------------------------------------
+items:
+  # ======================= MEČE =======================
+  training_sword:
+    name: "Cvičný meč"
+    type: SWORD
+    rarity: COMMON
+    level: 1
+    stats: {damage: 6}
+    icon: sword
+    colors: ["#b08a5a", "#6b4a2b", "#8a8a8a"]
+    sell: 5
+  iron_blade:
+    name: "Železná čepel"
+    type: SWORD
+    rarity: COMMON
+    level: 5
+    stats: {damage: 9}
+    icon: sword
+    colors: ["#c8c8d0", "#6b4a2b", "#8a8a8a"]
+    sell: 20
+  knight_blade:
+    name: "Rytířský meč"
+    type: SWORD
+    rarity: UNCOMMON
+    level: 10
+    stats: {damage: 13, strength: 3}
+    icon: sword
+    colors: ["#d8dde8", "#3b5fa8", "#e8c24a"]
+    sell: 60
+  flame_sword:
+    name: "Plamenný meč"
+    type: SWORD
+    rarity: RARE
+    level: 20
+    stats: {damage: 20, strength: 5}
+    on-hit: {element: FIRE, chance: 30}
+    ability: {type: CONE, element: FIRE, name: "Ohnivá vlna", power: 1.3, range: 6, mana: 18, cooldown: 6}
+    lore: ["Čepel ukovaná v sopečném žáru."]
+    icon: sword
+    colors: ["#ff8a3a", "#5a2a1a", "#ffd23a"]
+    sell: 220
+  frost_blade:
+    name: "Mrazivá čepel"
+    type: SWORD
+    rarity: RARE
+    level: 30
+    stats: {damage: 27, strength: 6, defense: 8}
+    on-hit: {element: FROST, chance: 35}
+    ability: {type: NOVA, element: FROST, name: "Ledová nova", power: 1.1, radius: 5, mana: 22, cooldown: 8}
+    lore: ["Nikdy neroztaje."]
+    icon: sword
+    colors: ["#9fe0ff", "#3f7fb0", "#ffffff"]
+    sell: 400
+  thunder_blade:
+    name: "Hromová čepel"
+    type: SWORD
+    rarity: EPIC
+    level: 40
+    stats: {damage: 36, strength: 10, crit_chance: 6}
+    on-hit: {element: LIGHTNING, chance: 20}
+    ability: {type: STRIKE, element: LIGHTNING, name: "Úder blesku", power: 2.0, radius: 3, mana: 30, cooldown: 7}
+    lore: ["Bouře spoutaná v oceli."]
+    icon: sword
+    colors: ["#f5e85a", "#4a4a6a", "#7ad0ff"]
+    sell: 900
+  holy_avenger:
+    name: "Svatý mstitel"
+    type: GREATSWORD
+    rarity: EPIC
+    level: 55
+    classes: [WARRIOR]
+    stats: {damage: 52, strength: 14, health: 60}
+    on-hit: {element: HOLY, chance: 25}
+    ability: {type: HEAL, element: HOLY, name: "Požehnání", power: 60, radius: 6, mana: 40, cooldown: 20}
+    lore: ["Světlo, které nezhasne."]
+    icon: greatsword
+    colors: ["#fff6d0", "#c9a227", "#5ad0ff"]
+    sell: 2200
+  dragon_slayer:
+    name: "Drakobijec"
+    type: GREATSWORD
+    rarity: LEGENDARY
+    level: 75
+    classes: [WARRIOR]
+    stats: {damage: 72, strength: 22, crit_damage: 30}
+    on-hit: {element: FIRE, chance: 30}
+    ability: {type: DASH, element: FIRE, name: "Dračí výpad", power: 2.2, range: 10, mana: 45, cooldown: 9}
+    lore: ["Jediná čepel, která prorazí dračí šupiny."]
+    icon: greatsword
+    colors: ["#3f9a65", "#17452c", "#ffd24a"]
+    glint: true
+    sell: 6000
+  void_edge:
+    name: "Ostří prázdnoty"
+    type: SWORD
+    rarity: MYTHIC
+    level: 90
+    stats: {damage: 88, strength: 25, crit_chance: 10, lifesteal: 6}
+    on-hit: {element: VOID, chance: 30}
+    ability: {type: NOVA, element: VOID, name: "Trhlina prázdnoty", power: 1.8, radius: 7, pull: true, mana: 60, cooldown: 12}
+    lore: ["Pohlcuje světlo i naději."]
+    icon: sword
+    colors: ["#3a2a6a", "#120c22", "#d05aff"]
+    glint: true
+    sell: 15000
+
+  # ======================= SEKERY, KLADIVA, KOSY, KOPÍ =======================
+  war_axe:
+    name: "Válečná sekera"
+    type: AXE
+    rarity: UNCOMMON
+    level: 8
+    classes: [WARRIOR]
+    stats: {damage: 15, strength: 3}
+    icon: axe
+    colors: ["#b9c0cc", "#6b4a2b", "#8a8a8a"]
+    sell: 50
+  berserker_axe:
+    name: "Sekera berserkra"
+    type: AXE
+    rarity: RARE
+    level: 35
+    classes: [WARRIOR]
+    stats: {damage: 40, strength: 12, lifesteal: 5}
+    ability: {type: NOVA, element: PHYSICAL, name: "Zběsilý vír", power: 1.4, radius: 4, mana: 25, cooldown: 7}
+    lore: ["Čím víc krve, tím líp seká."]
+    icon: axe
+    colors: ["#c04a3a", "#3a2018", "#e8c24a"]
+    sell: 700
+  titan_hammer:
+    name: "Kladivo titánů"
+    type: HAMMER
+    rarity: EPIC
+    level: 50
+    classes: [WARRIOR]
+    stats: {damage: 58, strength: 18, defense: 20}
+    on-hit: {element: EARTH, chance: 25}
+    ability: {type: NOVA, element: EARTH, name: "Zemětřesení", power: 1.7, radius: 6, mana: 40, cooldown: 10}
+    lore: ["Země se třese při každém úderu."]
+    icon: hammer
+    colors: ["#8a8a88", "#5a3a1a", "#3affc0"]
+    sell: 1800
+  blood_reaper:
+    name: "Krvavá kosa"
+    type: SCYTHE
+    rarity: LEGENDARY
+    level: 65
+    stats: {damage: 62, strength: 16, lifesteal: 10, crit_chance: 8}
+    on-hit: {element: SHADOW, chance: 20}
+    ability: {type: CONE, element: SHADOW, name: "Žeň duší", power: 1.9, range: 7, drain: 0.4, mana: 40, cooldown: 9}
+    lore: ["Sklízí životy jako obilí."]
+    icon: scythe
+    colors: ["#c02a3a", "#2a1a1a", "#ff5a6a"]
+    glint: true
+    sell: 4500
+  guard_spear:
+    name: "Kopí stráže"
+    type: SPEAR
+    rarity: UNCOMMON
+    level: 15
+    stats: {damage: 16, agility: 4}
+    ability: {type: DASH, element: PHYSICAL, name: "Výpad", power: 1.4, range: 7, mana: 14, cooldown: 6}
+    icon: spear
+    colors: ["#c8c8d0", "#7a5a36", "#3b5fa8"]
+    sell: 120
+  storm_halberd:
+    name: "Bouřná halapartna"
+    type: SPEAR
+    rarity: EPIC
+    level: 45
+    stats: {damage: 44, strength: 10, agility: 10}
+    on-hit: {element: LIGHTNING, chance: 25}
+    ability: {type: DASH, element: LIGHTNING, name: "Bleskový průraz", power: 1.9, range: 10, mana: 32, cooldown: 7}
+    icon: spear
+    colors: ["#7ad0ff", "#3a3a5a", "#f5e85a"]
+    sell: 1300
+
+  # ======================= DÝKY =======================
+  rusty_dagger:
+    name: "Rezavá dýka"
+    type: DAGGER
+    rarity: COMMON
+    level: 1
+    stats: {damage: 5, crit_chance: 4}
+    icon: dagger
+    colors: ["#a07a5a", "#4a3520", "#8a8a8a"]
+    sell: 5
+  shadow_dagger:
+    name: "Stínová dýka"
+    type: DAGGER
+    rarity: UNCOMMON
+    level: 12
+    classes: [ROGUE]
+    stats: {damage: 11, crit_chance: 10, agility: 4}
+    icon: dagger
+    colors: ["#5a5a7a", "#1d1d28", "#a03ad0"]
+    sell: 90
+  venom_fang:
+    name: "Jedový tesák"
+    type: DAGGER
+    rarity: RARE
+    level: 28
+    classes: [ROGUE]
+    stats: {damage: 22, crit_chance: 12, agility: 8}
+    on-hit: {element: POISON, chance: 45}
+    ability: {type: DASH, element: POISON, name: "Jedovatý skok", power: 1.5, range: 8, mana: 18, cooldown: 6}
+    lore: ["Jedno škrábnutí stačí."]
+    icon: dagger
+    colors: ["#8ad04a", "#2a3a1a", "#d0ff5a"]
+    sell: 380
+  phantom_blade:
+    name: "Přízračná čepel"
+    type: DAGGER
+    rarity: EPIC
+    level: 50
+    classes: [ROGUE]
+    stats: {damage: 40, crit_chance: 18, crit_damage: 30, agility: 14}
+    on-hit: {element: SHADOW, chance: 30}
+    ability: {type: STRIKE, element: SHADOW, name: "Úder ze stínu", power: 2.4, radius: 2, mana: 30, cooldown: 8}
+    icon: dagger
+    colors: ["#b0a0e0", "#2a2040", "#ffffff"]
+    sell: 1700
+  nightfall:
+    name: "Soumrak"
+    type: DAGGER
+    rarity: LEGENDARY
+    level: 80
+    classes: [ROGUE]
+    stats: {damage: 64, crit_chance: 25, crit_damage: 60, agility: 24, lifesteal: 5}
+    on-hit: {element: VOID, chance: 30}
+    ability: {type: DASH, element: VOID, name: "Krok soumraku", power: 2.6, range: 12, mana: 40, cooldown: 7}
+    lore: ["Poslední, co oběť uvidí, je tma."]
+    icon: dagger
+    colors: ["#2a2a4a", "#0a0a14", "#ff5aff"]
+    glint: true
+    sell: 7000
+
+  # ======================= HOLE A HŮLKY =======================
+  apprentice_wand:
+    name: "Učňovská hůlka"
+    type: WAND
+    rarity: COMMON
+    level: 1
+    stats: {damage: 5, mana: 10}
+    ability: {type: BOLT, element: ARCANE, name: "Magická střela", power: 1.0, mana: 3, cooldown: 0.6}
+    icon: wand
+    colors: ["#8a6a4a", "#4a3520", "#7ad0ff"]
+    sell: 5
+  fire_staff:
+    name: "Ohnivá hůl"
+    type: STAFF
+    rarity: UNCOMMON
+    level: 12
+    classes: [MAGE]
+    stats: {damage: 12, intelligence: 6, mana: 20}
+    ability: {type: BOLT, element: FIRE, name: "Ohnivá koule", power: 1.2, radius: 2.5, mana: 6, cooldown: 0.9}
+    icon: staff
+    colors: ["#7a4a2a", "#3a2010", "#ff7a1a"]
+    sell: 100
+  healing_staff:
+    name: "Hůl léčitele"
+    type: STAFF
+    rarity: RARE
+    level: 20
+    stats: {damage: 10, intelligence: 10, mana: 50, mana_regen: 1}
+    ability: {type: HEAL, element: HOLY, name: "Léčivé světlo", power: 35, radius: 6, mana: 25, cooldown: 8}
+    lore: ["Uzdraví tebe i spojence okolo."]
+    icon: staff
+    colors: ["#e8e0c0", "#c9a227", "#5aff8a"]
+    sell: 260
+  ice_staff:
+    name: "Ledová hůl"
+    type: STAFF
+    rarity: RARE
+    level: 25
+    classes: [MAGE]
+    stats: {damage: 20, intelligence: 12, mana: 40}
+    ability: {type: BOLT, element: FROST, name: "Ledový střep", power: 1.2, radius: 2, mana: 8, cooldown: 0.9}
+    icon: staff
+    colors: ["#b0d8f0", "#3f7fb0", "#ffffff"]
+    sell: 340
+  storm_staff:
+    name: "Bouřná hůl"
+    type: STAFF
+    rarity: EPIC
+    level: 40
+    classes: [MAGE]
+    stats: {damage: 32, intelligence: 20, mana: 70, crit_chance: 5}
+    ability: {type: STRIKE, element: LIGHTNING, name: "Řetězový blesk", power: 1.3, radius: 4, mana: 12, cooldown: 1.2}
+    icon: staff
+    colors: ["#5a5a8a", "#2a2a4a", "#f5e85a"]
+    sell: 1000
+  necro_staff:
+    name: "Hůl nekromanta"
+    type: STAFF
+    rarity: EPIC
+    level: 55
+    classes: [MAGE]
+    stats: {damage: 42, intelligence: 26, mana: 90, lifesteal: 4}
+    ability: {type: BOLT, element: SHADOW, name: "Vysátí života", power: 1.3, drain: 0.35, mana: 12, cooldown: 1.0}
+    lore: ["Šeptá jména mrtvých."]
+    icon: staff
+    colors: ["#3a4a3a", "#101a10", "#7aff3a"]
+    sell: 2300
+  arcane_staff:
+    name: "Arkánová hůl"
+    type: STAFF
+    rarity: LEGENDARY
+    level: 70
+    classes: [MAGE]
+    stats: {damage: 58, intelligence: 36, mana: 140, mana_regen: 3, crit_chance: 8}
+    ability: {type: BOLT, element: ARCANE, name: "Arkánový paprsek", power: 1.4, pierce: true, mana: 14, cooldown: 0.8}
+    icon: staff
+    colors: ["#9a5ad8", "#3c1f66", "#5ae0ff"]
+    glint: true
+    sell: 5200
+  void_staff:
+    name: "Hůl prázdnoty"
+    type: STAFF
+    rarity: MYTHIC
+    level: 90
+    classes: [MAGE]
+    stats: {damage: 80, intelligence: 50, mana: 220, mana_regen: 5, crit_chance: 10}
+    ability: {type: BOLT, element: VOID, name: "Koule prázdnoty", power: 1.6, radius: 4, pull: true, mana: 20, cooldown: 1.0}
+    lore: ["Zírá do ní propast. A ta zírá zpět."]
+    icon: staff
+    colors: ["#2a1f45", "#0a0618", "#ff5aff"]
+    glint: true
+    sell: 15000
+
+  # ======================= LUKY =======================
+  hunter_bow:
+    name: "Lovecký luk"
+    type: BOW
+    rarity: COMMON
+    level: 1
+    stats: {damage: 6}
+    icon: bow
+    colors: ["#8a6a4a", "#d8d8d8", "#8a8a8a"]
+    sell: 5
+  elven_bow:
+    name: "Elfí luk"
+    type: BOW
+    rarity: UNCOMMON
+    level: 15
+    classes: [ARCHER]
+    stats: {damage: 13, agility: 6, crit_chance: 5}
+    icon: bow
+    colors: ["#6aa84f", "#f0f0d0", "#e8c24a"]
+    sell: 130
+  storm_bow:
+    name: "Bouřný luk"
+    type: BOW
+    rarity: RARE
+    level: 35
+    classes: [ARCHER]
+    stats: {damage: 26, agility: 12, crit_chance: 8}
+    on-hit: {element: LIGHTNING, chance: 25}
+    icon: bow
+    colors: ["#5a7ac8", "#e0f0ff", "#f5e85a"]
+    sell: 650
+  inferno_bow:
+    name: "Pekelný luk"
+    type: BOW
+    rarity: EPIC
+    level: 55
+    classes: [ARCHER]
+    stats: {damage: 40, agility: 18, crit_chance: 12, crit_damage: 25}
+    on-hit: {element: FIRE, chance: 50}
+    icon: bow
+    colors: ["#a03a1a", "#ffb05a", "#ffd23a"]
+    sell: 2200
+  dragon_bow:
+    name: "Dračí luk"
+    type: BOW
+    rarity: LEGENDARY
+    level: 80
+    classes: [ARCHER]
+    stats: {damage: 62, agility: 30, crit_chance: 18, crit_damage: 50}
+    on-hit: {element: FIRE, chance: 40}
+    lore: ["Tětiva z dračí šlachy."]
+    icon: bow
+    colors: ["#2f8a55", "#ffe89a", "#ffd24a"]
+    glint: true
+    sell: 7000
+
+  # ======================= DOPLŇKY =======================
+  ring_of_strength:
+    name: "Prsten síly"
+    type: ACCESSORY
+    rarity: UNCOMMON
+    level: 5
+    stats: {strength: 5}
+    icon: ring
+    colors: ["#e8c24a", "#a07a1a", "#e03a3a"]
+    sell: 80
+  ring_of_wisdom:
+    name: "Prsten moudrosti"
+    type: ACCESSORY
+    rarity: UNCOMMON
+    level: 5
+    stats: {intelligence: 5, mana: 20}
+    icon: ring
+    colors: ["#d8dde8", "#8a90a0", "#3a8aff"]
+    sell: 80
+  ring_of_swiftness:
+    name: "Prsten hbitosti"
+    type: ACCESSORY
+    rarity: UNCOMMON
+    level: 5
+    stats: {agility: 5, speed: 3}
+    icon: ring
+    colors: ["#e8c24a", "#a07a1a", "#3ad06a"]
+    sell: 80
+  amulet_of_life:
+    name: "Amulet života"
+    type: ACCESSORY
+    rarity: RARE
+    level: 15
+    stats: {health: 40, vitality: 4}
+    icon: amulet
+    colors: ["#e8c24a", "#a07a1a", "#ff3a4a"]
+    sell: 250
+  amulet_of_mana:
+    name: "Amulet many"
+    type: ACCESSORY
+    rarity: RARE
+    level: 15
+    stats: {mana: 60, mana_regen: 2}
+    icon: amulet
+    colors: ["#d8dde8", "#8a90a0", "#3a8aff"]
+    sell: 250
+  hunter_talisman:
+    name: "Talisman lovce"
+    type: ACCESSORY
+    rarity: RARE
+    level: 20
+    stats: {crit_chance: 6, crit_damage: 15}
+    icon: charm
+    colors: ["#c9a86a", "#6b4a2b", "#3ad06a"]
+    sell: 300
+  berserker_belt:
+    name: "Opasek berserkra"
+    type: ACCESSORY
+    rarity: RARE
+    level: 30
+    stats: {strength: 12, health: 30}
+    icon: belt
+    colors: ["#6b4a2b", "#3a2818", "#e8c24a"]
+    sell: 450
+  frost_charm:
+    name: "Mrazivý přívěsek"
+    type: ACCESSORY
+    rarity: EPIC
+    level: 40
+    stats: {defense: 25, intelligence: 12, mana: 50}
+    icon: charm
+    colors: ["#9fe0ff", "#3f7fb0", "#ffffff"]
+    sell: 900
+  phoenix_feather:
+    name: "Pero fénixe"
+    type: ACCESSORY
+    rarity: EPIC
+    level: 50
+    stats: {health: 100, lifesteal: 4, mana_regen: 2}
+    lore: ["Stále hřeje."]
+    icon: feather
+    colors: ["#ff7a1a", "#c02a1a", "#ffe14a"]
+    sell: 1500
+  dragon_heart_amulet:
+    name: "Amulet dračího srdce"
+    type: ACCESSORY
+    rarity: LEGENDARY
+    level: 70
+    stats: {health: 200, strength: 15, defense: 30}
+    icon: amulet
+    colors: ["#2f8a55", "#17452c", "#ff4a2a"]
+    glint: true
+    sell: 5000
+  void_ring:
+    name: "Prsten prázdnoty"
+    type: ACCESSORY
+    rarity: MYTHIC
+    level: 85
+    stats: {strength: 20, intelligence: 20, agility: 20, crit_chance: 8}
+    icon: ring
+    colors: ["#3a2a6a", "#120c22", "#ff5aff"]
+    glint: true
+    sell: 12000
+
+  # ======================= LEKTVARY A SPOTŘEBNÍ =======================
+  health_potion_small:
+    name: "Malý lektvar života"
+    type: CONSUMABLE
+    rarity: COMMON
+    use: {type: HEAL, amount: 40}
+    icon: potion
+    colors: ["#e03a3a", "#c8d8e0", "#8a5a2a"]
+    price: 15
+    sell: 4
+  health_potion_medium:
+    name: "Lektvar života"
+    type: CONSUMABLE
+    rarity: UNCOMMON
+    level: 15
+    use: {type: HEAL, amount: 120}
+    icon: potion
+    colors: ["#ff2a4a", "#c8d8e0", "#c9a227"]
+    price: 60
+    sell: 15
+  health_potion_large:
+    name: "Velký lektvar života"
+    type: CONSUMABLE
+    rarity: RARE
+    level: 40
+    use: {type: HEAL, amount: 350}
+    icon: potion_large
+    colors: ["#ff1a5a", "#c8d8e0", "#c9a227"]
+    price: 250
+    sell: 60
+  mana_potion_small:
+    name: "Malý lektvar many"
+    type: CONSUMABLE
+    rarity: COMMON
+    use: {type: MANA, amount: 50}
+    icon: potion
+    colors: ["#3a6aff", "#c8d8e0", "#8a5a2a"]
+    price: 15
+    sell: 4
+  mana_potion_medium:
+    name: "Lektvar many"
+    type: CONSUMABLE
+    rarity: UNCOMMON
+    level: 15
+    use: {type: MANA, amount: 150}
+    icon: potion
+    colors: ["#2a8aff", "#c8d8e0", "#c9a227"]
+    price: 60
+    sell: 15
+  mana_potion_large:
+    name: "Velký lektvar many"
+    type: CONSUMABLE
+    rarity: RARE
+    level: 40
+    use: {type: MANA, amount: 400}
+    icon: potion_large
+    colors: ["#1ab0ff", "#c8d8e0", "#c9a227"]
+    price: 250
+    sell: 60
+  elixir_strength:
+    name: "Elixír síly"
+    type: CONSUMABLE
+    rarity: RARE
+    level: 10
+    use: {type: BUFF, stat: strength, amount: 25, duration: 120}
+    icon: potion
+    colors: ["#ff8a1a", "#c8d8e0", "#c9a227"]
+    price: 180
+    sell: 40
+  elixir_wisdom:
+    name: "Elixír moudrosti"
+    type: CONSUMABLE
+    rarity: RARE
+    level: 10
+    use: {type: BUFF, stat: intelligence, amount: 25, duration: 120}
+    icon: potion
+    colors: ["#b05aff", "#c8d8e0", "#c9a227"]
+    price: 180
+    sell: 40
+  elixir_swiftness:
+    name: "Elixír hbitosti"
+    type: CONSUMABLE
+    rarity: RARE
+    level: 10
+    use: {type: BUFF, stat: agility, amount: 25, duration: 120}
+    icon: potion
+    colors: ["#3ad06a", "#c8d8e0", "#c9a227"]
+    price: 180
+    sell: 40
+  elixir_iron:
+    name: "Elixír železné kůže"
+    type: CONSUMABLE
+    rarity: RARE
+    level: 10
+    use: {type: BUFF, stat: defense, amount: 40, duration: 120}
+    icon: potion
+    colors: ["#9aa0b0", "#c8d8e0", "#c9a227"]
+    price: 180
+    sell: 40
+  hero_bread:
+    name: "Chléb hrdinů"
+    type: CONSUMABLE
+    rarity: COMMON
+    use: {type: FOOD, amount: 20}
+    lore: ["Zasytí a trochu uzdraví."]
+    icon: bread
+    colors: ["#d8a04a", "#8a5a2a", "#f0d090"]
+    price: 8
+    sell: 2
+  xp_tome:
+    name: "Kniha zkušeností"
+    type: CONSUMABLE
+    rarity: RARE
+    use: {type: XP, amount: 500}
+    icon: tome
+    colors: ["#3a8a4a", "#e8c24a", "#f0f0d0"]
+    sell: 100
+  ancient_tome:
+    name: "Prastará kniha vědění"
+    type: CONSUMABLE
+    rarity: EPIC
+    use: {type: XP, amount: 5000}
+    icon: tome
+    colors: ["#7a3fc0", "#e8c24a", "#f0f0d0"]
+    glint: true
+    sell: 800
+  scroll_teleport:
+    name: "Svitek návratu"
+    type: CONSUMABLE
+    rarity: UNCOMMON
+    use: {type: TELEPORT}
+    lore: ["Přenese tě na spawn."]
+    icon: scroll
+    colors: ["#e8dcb0", "#a08a5a", "#3a8aff"]
+    price: 40
+    sell: 10
+  scroll_reset:
+    name: "Svitek zapomnění"
+    type: CONSUMABLE
+    rarity: RARE
+    use: {type: RESET_STATS}
+    lore: ["Vrátí všechny rozdělené body atributů."]
+    icon: scroll
+    colors: ["#e8dcb0", "#a08a5a", "#e03a3a"]
+    price: 1000
+    sell: 100
+
+  # ======================= VYLEPŠOVÁNÍ =======================
+  upgrade_stone:
+    name: "Kámen vylepšení"
+    type: MATERIAL
+    rarity: UNCOMMON
+    lore: ["Použij u kováře na vylepšení +1 až +5."]
+    icon: stone
+    colors: ["#5ad0ff", "#2a6a9a", "#ffffff"]
+    price: 150
+    sell: 30
+  greater_upgrade_stone:
+    name: "Velký kámen vylepšení"
+    type: MATERIAL
+    rarity: EPIC
+    lore: ["Použij u kováře na vylepšení +6 až +10."]
+    icon: stone
+    colors: ["#ff7aff", "#8a2a9a", "#ffffff"]
+    glint: true
+    sell: 300
+
+  # ======================= MATERIÁLY =======================
+  goblin_ear:
+    name: "Goblinní ucho"
+    type: MATERIAL
+    rarity: COMMON
+    icon: ear
+    colors: ["#6aa84f", "#3a6a2a", "#c08a8a"]
+    sell: 3
+  bone_fragment:
+    name: "Úlomek kosti"
+    type: MATERIAL
+    rarity: COMMON
+    icon: bone
+    colors: ["#e8e2cc", "#a09a84", "#ffffff"]
+    sell: 3
+  wolf_pelt:
+    name: "Vlčí kožešina"
+    type: MATERIAL
+    rarity: COMMON
+    icon: pelt
+    colors: ["#8a8a90", "#5a5a60", "#d0d0d0"]
+    sell: 5
+  spider_silk:
+    name: "Pavoučí hedvábí"
+    type: MATERIAL
+    rarity: COMMON
+    icon: silk
+    colors: ["#f0f0f0", "#b0b0b8", "#ffffff"]
+    sell: 4
+  bandit_insignia:
+    name: "Odznak banditů"
+    type: MATERIAL
+    rarity: UNCOMMON
+    icon: badge
+    colors: ["#b03030", "#5a1818", "#e8c24a"]
+    sell: 10
+  cursed_cloth:
+    name: "Prokletá látka"
+    type: MATERIAL
+    rarity: UNCOMMON
+    icon: cloth
+    colors: ["#5a2a4a", "#2a1020", "#e03a6a"]
+    sell: 12
+  steel_ingot:
+    name: "Ocelový ingot"
+    type: MATERIAL
+    rarity: UNCOMMON
+    icon: ingot
+    colors: ["#9aa4b4", "#5a6474", "#ffffff"]
+    price: 40
+    sell: 10
+  enchanted_leather:
+    name: "Očarovaná kůže"
+    type: MATERIAL
+    rarity: UNCOMMON
+    icon: pelt
+    colors: ["#8a5a8a", "#4a2a5a", "#e0a0ff"]
+    price: 40
+    sell: 10
+  magic_dust:
+    name: "Magický prach"
+    type: MATERIAL
+    rarity: UNCOMMON
+    icon: dust
+    colors: ["#7ad0ff", "#3a6aff", "#ffffff"]
+    price: 30
+    sell: 8
+  frost_crystal:
+    name: "Mrazivý krystal"
+    type: MATERIAL
+    rarity: RARE
+    icon: crystal
+    colors: ["#9fe0ff", "#3f7fb0", "#ffffff"]
+    sell: 40
+  fire_core:
+    name: "Ohnivé jádro"
+    type: MATERIAL
+    rarity: RARE
+    icon: orb
+    colors: ["#ff7a1a", "#a02a0a", "#ffe14a"]
+    sell: 40
+  shadow_essence:
+    name: "Esence stínu"
+    type: MATERIAL
+    rarity: RARE
+    icon: wisp
+    colors: ["#7a4ab0", "#2a1a4a", "#e0a0ff"]
+    sell: 45
+  stone_heart:
+    name: "Kamenné srdce"
+    type: MATERIAL
+    rarity: RARE
+    icon: heart
+    colors: ["#8a8a88", "#4a4a48", "#3affc0"]
+    sell: 60
+  mithril_ingot:
+    name: "Mithrilový ingot"
+    type: MATERIAL
+    rarity: RARE
+    icon: ingot
+    colors: ["#8ae8e0", "#3a8a90", "#ffffff"]
+    sell: 80
+  ancient_rune:
+    name: "Prastará runa"
+    type: MATERIAL
+    rarity: EPIC
+    icon: rune
+    colors: ["#6a6a78", "#3a3a48", "#5ae0ff"]
+    sell: 150
+  dragon_scale:
+    name: "Dračí šupina"
+    type: MATERIAL
+    rarity: EPIC
+    icon: scale
+    colors: ["#2f8a55", "#17452c", "#ffd24a"]
+    sell: 300
+  void_shard:
+    name: "Střep prázdnoty"
+    type: MATERIAL
+    rarity: LEGENDARY
+    icon: crystal
+    colors: ["#5a3a9a", "#1a0c3a", "#ff5aff"]
+    glint: true
+    sell: 600
+
+  # ---- duše bossů (trofeje na craft) ----
+  soul_goblin_king:
+    name: "Duše Krále goblinů"
+    type: MATERIAL
+    rarity: RARE
+    icon: soul
+    colors: ["#6aa84f", "#2a5a1a", "#ffe14a"]
+    sell: 100
+  soul_bone_lord:
+    name: "Duše Pána kostí"
+    type: MATERIAL
+    rarity: RARE
+    icon: soul
+    colors: ["#e8e2cc", "#8a8470", "#c45aff"]
+    sell: 200
+  soul_frost_queen:
+    name: "Duše Ledové královny"
+    type: MATERIAL
+    rarity: EPIC
+    icon: soul
+    colors: ["#9fe0ff", "#3f7fb0", "#ffffff"]
+    sell: 400
+  soul_inferno_lord:
+    name: "Duše Pána pekel"
+    type: MATERIAL
+    rarity: EPIC
+    icon: soul
+    colors: ["#ff7a1a", "#a02a0a", "#ffe14a"]
+    sell: 700
+  soul_shadow_assassin:
+    name: "Duše Stínového vraha"
+    type: MATERIAL
+    rarity: EPIC
+    icon: soul
+    colors: ["#7a4ab0", "#2a1a4a", "#ff5aff"]
+    sell: 1000
+  soul_stone_titan:
+    name: "Duše Kamenného titána"
+    type: MATERIAL
+    rarity: LEGENDARY
+    icon: soul
+    colors: ["#9a9a98", "#4a4a48", "#3affc0"]
+    sell: 1500
+  soul_lich:
+    name: "Duše Liche"
+    type: MATERIAL
+    rarity: LEGENDARY
+    icon: soul
+    colors: ["#7aff3a", "#2a6a1a", "#f0ffd0"]
+    sell: 2500
+  soul_void_lord:
+    name: "Duše Pána prázdnoty"
+    type: MATERIAL
+    rarity: MYTHIC
+    icon: soul
+    colors: ["#c45aff", "#3a1a6a", "#ffffff"]
+    glint: true
+    sell: 6000
+
+  # ======================= VYVOLÁVACÍ PŘEDMĚTY =======================
+  summon_goblin_king:
+    name: "Goblinní válečný roh"
+    type: SUMMON
+    rarity: RARE
+    boss: goblin_king
+    icon: horn
+    colors: ["#d8c8a0", "#6aa84f", "#ffd23a"]
+    sell: 50
+  summon_bone_lord:
+    name: "Prokletá lebka"
+    type: SUMMON
+    rarity: RARE
+    boss: bone_lord
+    icon: skull
+    colors: ["#e8e2cc", "#8a8470", "#c45aff"]
+    sell: 100
+  summon_frost_queen:
+    name: "Zamrzlá koruna"
+    type: SUMMON
+    rarity: EPIC
+    boss: frost_queen
+    icon: crown
+    colors: ["#bfe8ff", "#5aa0d8", "#ffffff"]
+    sell: 200
+  summon_inferno_lord:
+    name: "Pekelná pečeť"
+    type: SUMMON
+    rarity: EPIC
+    boss: inferno_lord
+    icon: sigil
+    colors: ["#8a2a1a", "#3a1410", "#ff9a2a"]
+    sell: 350
+  summon_shadow_assassin:
+    name: "Kontrakt na vraha"
+    type: SUMMON
+    rarity: EPIC
+    boss: shadow_assassin
+    icon: scroll
+    colors: ["#4a4a5a", "#1a1a24", "#c43aff"]
+    sell: 500
+  summon_stone_titan:
+    name: "Runový kámen titána"
+    type: SUMMON
+    rarity: LEGENDARY
+    boss: stone_titan
+    icon: rune
+    colors: ["#8a8a88", "#4a4a48", "#3affc0"]
+    glint: true
+    sell: 800
+  summon_lich:
+    name: "Fylakterie"
+    type: SUMMON
+    rarity: LEGENDARY
+    boss: lich
+    icon: orb
+    colors: ["#3a5a3a", "#101a10", "#7aff3a"]
+    glint: true
+    sell: 1200
+  summon_void_lord:
+    name: "Oko prázdnoty"
+    type: SUMMON
+    rarity: MYTHIC
+    boss: void_lord
+    icon: eye
+    colors: ["#2a1f45", "#0a0618", "#ff5aff"]
+    glint: true
+    sell: 3000
