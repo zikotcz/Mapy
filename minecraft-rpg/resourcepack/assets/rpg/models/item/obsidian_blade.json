@@ -1,0 +1,6 @@
+{
+  "parent": "rpg:item/handheld_large",
+  "textures": {
+    "layer0": "rpg:item/obsidian_blade"
+  }
+}

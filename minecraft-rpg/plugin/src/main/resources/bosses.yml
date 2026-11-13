@@ -43,6 +43,7 @@ goblin_king:
     - {below: 50, abilities: [charge, goblins, slam], speed: 1.2, damage: 1.3, message: "<red>Král goblinů zuří!"}
   loot:
     - {item: soul_goblin_king, chance: 100}
+    - {item: iron_crate, chance: 100}
     - {item: goblin_ear, chance: 100, min: 3, max: 8}
     - {item: war_axe, chance: 20}
     - {item: ring_of_strength, chance: 12}
@@ -73,6 +74,7 @@ bone_lord:
     - {below: 25, abilities: [volley, spikes, raise, curse], speed: 1.2, damage: 1.35, message: "<dark_purple>Pán kostí se nevzdá bez boje!"}
   loot:
     - {item: soul_bone_lord, chance: 100}
+    - {item: iron_crate, chance: 100}
     - {item: bone_fragment, chance: 100, min: 4, max: 10}
     - {item: guard_spear, chance: 18}
     - {item: amulet_of_life, chance: 12}
@@ -104,6 +106,7 @@ frost_queen:
     - {below: 30, abilities: [shards, blizzard, nova, shades, pull], speed: 1.25, damage: 1.35, message: "<white>Ledová královna rozpoutala vánici!"}
   loot:
     - {item: soul_frost_queen, chance: 100}
+    - {item: golden_crate, chance: 100}
     - {item: frost_crystal, chance: 100, min: 3, max: 7}
     - {item: frost_blade, chance: 15}
     - {item: ice_staff, chance: 15}
@@ -136,6 +139,7 @@ inferno_lord:
     - {below: 35, abilities: [fireballs, charge, meteor, imps, ring], speed: 1.25, damage: 1.4, message: "<red>Pán pekel plane hněvem!"}
   loot:
     - {item: soul_inferno_lord, chance: 100}
+    - {item: golden_crate, chance: 100}
     - {item: fire_core, chance: 100, min: 3, max: 8}
     - {item: thunder_blade, chance: 10}
     - {item: storm_staff, chance: 10}
@@ -169,6 +173,7 @@ shadow_assassin:
     - {below: 25, abilities: [blink, daggers, clones, darkness, dance], speed: 1.2, damage: 1.45, message: "<red>Stínový vrah tančí se smrtí!"}
   loot:
     - {item: soul_shadow_assassin, chance: 100}
+    - {item: crystal_crate, chance: 100}
     - {item: shadow_essence, chance: 100, min: 3, max: 8}
     - {item: phantom_blade, chance: 12}
     - {item: storm_halberd, chance: 12}
@@ -201,6 +206,7 @@ stone_titan:
     - {below: 30, abilities: [slam, boulders, pull, sentinels, quake, mend], speed: 1.2, damage: 1.4, message: "<aqua>Runy na titánovi se rozzářily!"}
   loot:
     - {item: soul_stone_titan, chance: 100}
+    - {item: crystal_crate, chance: 100}
     - {item: stone_heart, chance: 100, min: 2, max: 5}
     - {item: mithril_ingot, chance: 100, min: 3, max: 6}
     - {item: titan_hammer, chance: 14}
@@ -235,6 +241,7 @@ lich:
     - {below: 35, abilities: [bolts, souls, curse, raise, drain, nova, teleport], speed: 1.2, damage: 1.45, message: "<dark_green>Fylakterie praská - Lich zuří!"}
   loot:
     - {item: soul_lich, chance: 100}
+    - {item: dragon_crate, chance: 100}
     - {item: ancient_rune, chance: 100, min: 2, max: 5}
     - {item: necro_staff, chance: 14}
     - {item: blood_reaper, chance: 10}
@@ -275,6 +282,7 @@ void_lord:
     - {below: 15, abilities: [orbs, rain, blink, rift, storm, collapse, drain, curse], speed: 1.3, damage: 1.6, message: "<red><bold>PÁN PRÁZDNOTY UVOLNIL SVOU PRAVOU MOC!"}
   loot:
     - {item: soul_void_lord, chance: 100}
+    - {item: void_crate, chance: 100}
     - {item: void_shard, chance: 100, min: 3, max: 7}
     - {item: void_edge, chance: 8}
     - {item: void_staff, chance: 8}

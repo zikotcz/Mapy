@@ -25,11 +25,54 @@ public abstract class Menu implements InventoryHolder {
     protected final Player player;
     private final Inventory inventory;
     private final Map<Integer, Consumer<InventoryClickEvent>> handlers = new HashMap<>();
+    private org.bukkit.scheduler.BukkitTask animation;
 
     protected Menu(RPGCore plugin, Player player, int rows, String title) {
         this.plugin = plugin;
         this.player = player;
-        this.inventory = Bukkit.createInventory(this, rows * 9, Text.mm(title));
+        this.inventory = Bukkit.createInventory(this, rows * 9, title(plugin, rows, title));
+    }
+
+    /**
+     * S resource packem se místo vanilla truhly vykreslí vlastní pozadí: je to znak ve fontu rpg:gui,
+     * posunutý záporným odsazením na začátek okna.
+     */
+    private static Component title(RPGCore plugin, int rows, String title) {
+        if (!plugin.getConfig().getBoolean("menus.custom-textures", true) || rows < 3) {
+            return Text.mm(title);
+        }
+        String text = title.replace("<dark_gray>", "<#ffe9a8>");
+        return Component.text("\uF801" + (char) (0xE100 + rows - 3) + "\uF802", net.kyori.adventure.text.format.NamedTextColor.WHITE)
+                .font(net.kyori.adventure.key.Key.key("rpg", "gui"))
+                .append(Text.mm(text).font(net.kyori.adventure.key.Key.key("minecraft", "default")));
+    }
+
+    /** Spustí animaci, která běží, dokud je menu otevřené. */
+    protected void animate(long periodTicks, Runnable frame) {
+        stopAnimation();
+        animation = Bukkit.getScheduler().runTaskTimer(plugin, frame, periodTicks, periodTicks);
+    }
+
+    protected void stopAnimation() {
+        if (animation != null) {
+            animation.cancel();
+            animation = null;
+        }
+    }
+
+    final void closed() {
+        stopAnimation();
+        onClose();
+    }
+
+    protected void setRaw(int slot, ItemStack stack) {
+        inventory.setItem(slot, stack);
+    }
+
+    public static ItemStack pane(Material material) {
+        ItemStack pane = new ItemStack(material);
+        pane.editMeta(meta -> meta.setHideTooltip(true));
+        return pane;
     }
 
     @Override
@@ -66,8 +109,10 @@ public abstract class Menu implements InventoryHolder {
 
     /** Vyplní prázdná místa tmavým sklem. */
     protected void fill() {
-        ItemStack pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        pane.editMeta(meta -> meta.setHideTooltip(true));
+        if (plugin.getConfig().getBoolean("menus.custom-textures", true)) {
+            return;                       // vlastní pozadí má sloty nakreslené, sklo by ho zakrylo
+        }
+        ItemStack pane = pane(Material.BLACK_STAINED_GLASS_PANE);
         for (int i = 0; i < inventory.getSize(); i++) {
             if (inventory.getItem(i) == null) {
                 inventory.setItem(i, pane);

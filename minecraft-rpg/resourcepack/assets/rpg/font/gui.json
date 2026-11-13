@@ -1,0 +1,47 @@
+{
+  "providers": [
+    {
+      "type": "space",
+      "advances": {
+        "": -8,
+        "": -169
+      }
+    },
+    {
+      "type": "bitmap",
+      "file": "rpg:gui/menu_3.png",
+      "ascent": 13,
+      "height": 168,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "rpg:gui/menu_4.png",
+      "ascent": 13,
+      "height": 186,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "rpg:gui/menu_5.png",
+      "ascent": 13,
+      "height": 204,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "rpg:gui/menu_6.png",
+      "ascent": 13,
+      "height": 222,
+      "chars": [
+        ""
+      ]
+    }
+  ]
+}

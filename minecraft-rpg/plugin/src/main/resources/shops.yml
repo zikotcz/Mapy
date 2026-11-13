@@ -28,6 +28,12 @@ shops:
       - {item: upgrade_stone, price: 150}
       - {item: scroll_reset, price: 1000}
       - {item: summon_goblin_king, price: 200}
+      - {item: wooden_crate, price: 80}
+      - {item: iron_crate, price: 300}
+      - {item: golden_crate, price: 1200}
+      - {item: woodcutter_axe, price: 40}
+      - {item: hunting_spear, price: 60}
+      - {item: silver_ingot, price: 60}
   potions:
     title: "Alchymistka Mira"
     items:
@@ -41,6 +47,9 @@ shops:
       - {item: elixir_wisdom, price: 180}
       - {item: elixir_swiftness, price: 180}
       - {item: elixir_iron, price: 180}
+      - {item: elixir_haste, price: 220}
+      - {item: elixir_fury, price: 450}
+      - {item: elixir_titan, price: 450}
 
 recipes:
   # ---- sety úrovně 10 ----
@@ -118,3 +127,18 @@ recipes:
   mithril_ingot: {result: mithril_ingot, level: 30, coins: 150, ingredients: {steel_ingot: 4, magic_dust: 4, frost_crystal: 1}}
   greater_upgrade_stone: {result: greater_upgrade_stone, level: 40, coins: 500, ingredients: {upgrade_stone: 5, ancient_rune: 1}}
   health_potion_large: {result: health_potion_large, amount: 3, level: 40, coins: 200, ingredients: {health_potion_medium: 3, fire_core: 1}}
+
+  # ---- další zbraně a doplňky ----
+  iron_mace: {result: iron_mace, level: 10, coins: 150, ingredients: {steel_ingot: 4, orc_tusk: 4}}
+  steel_longsword: {result: steel_longsword, level: 15, coins: 250, ingredients: {steel_ingot: 8, silver_ingot: 2}}
+  wind_katana: {result: wind_katana, level: 25, coins: 600, ingredients: {silver_ingot: 8, troll_hide: 4, soul_bone_lord: 1}}
+  holy_mace: {result: holy_mace, level: 38, coins: 1400, ingredients: {silver_ingot: 14, ghost_dust: 8, soul_frost_queen: 1}}
+  soul_scythe: {result: soul_scythe, level: 45, coins: 2600, ingredients: {ghost_dust: 16, dark_steel: 4, soul_frost_queen: 1}}
+  obsidian_blade: {result: obsidian_blade, level: 60, coins: 5000, ingredients: {dark_steel: 14, fire_core: 10, soul_inferno_lord: 1}}
+  doom_axe: {result: doom_axe, level: 70, coins: 10000, ingredients: {dark_steel: 20, demon_horn: 8, soul_shadow_assassin: 1}}
+  dragon_lance: {result: dragon_lance, level: 72, coins: 11000, ingredients: {dragon_scale: 16, demon_horn: 6, soul_stone_titan: 1}}
+  ring_of_fury: {result: ring_of_fury, level: 25, coins: 600, ingredients: {silver_ingot: 4, orc_tusk: 10}}
+  titan_belt: {result: titan_belt, level: 58, coins: 4000, ingredients: {troll_hide: 16, stone_heart: 6, soul_stone_titan: 1}}
+  dark_steel: {result: dark_steel, level: 40, coins: 200, ingredients: {steel_ingot: 3, shadow_essence: 1}}
+  iron_crate: {result: iron_crate, level: 10, coins: 100, ingredients: {wooden_crate: 3}}
+  golden_crate: {result: golden_crate, level: 25, coins: 400, ingredients: {iron_crate: 3}}

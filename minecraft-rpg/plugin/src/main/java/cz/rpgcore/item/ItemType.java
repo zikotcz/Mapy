@@ -24,7 +24,8 @@ public enum ItemType {
     ACCESSORY("Doplněk", Material.ECHO_SHARD, Kind.OTHER, 0, 1),
     CONSUMABLE("Spotřební předmět", Material.ECHO_SHARD, Kind.OTHER, 0, 16),
     MATERIAL("Materiál", Material.ECHO_SHARD, Kind.OTHER, 0, 64),
-    SUMMON("Vyvolávací předmět", Material.ECHO_SHARD, Kind.OTHER, 0, 16);
+    SUMMON("Vyvolávací předmět", Material.ECHO_SHARD, Kind.OTHER, 0, 16),
+    CRATE("Bedna", Material.ECHO_SHARD, Kind.OTHER, 0, 16);
 
     public enum Kind {MELEE, MAGIC, RANGED, ARMOR, OTHER}
 

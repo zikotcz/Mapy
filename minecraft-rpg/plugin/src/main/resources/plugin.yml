@@ -17,6 +17,9 @@ commands:
   stats:
     description: Atributy postavy
     aliases: [staty]
+  rewards:
+    description: Denní a postupové odměny
+    aliases: [odmeny]
   skills:
     description: Dovednosti třídy
     aliases: [dovednosti]

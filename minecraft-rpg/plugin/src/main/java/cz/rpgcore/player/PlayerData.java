@@ -33,6 +33,11 @@ public final class PlayerData {
     public final Set<String> completed = new LinkedHashSet<>();
     public final ItemStack[] accessories = new ItemStack[ACCESSORY_SLOTS];
 
+    /** denní odměny: den (epoch day) posledního vyzvednutí a délka série */
+    public long dailyDay;
+    public int dailyStreak;
+    public final Set<Integer> levelRewards = new LinkedHashSet<>();
+
     // ---- jen za běhu ----
     public final Map<Stat, Double> totals = new EnumMap<>(Stat.class);
     public double maxHealth = 20;

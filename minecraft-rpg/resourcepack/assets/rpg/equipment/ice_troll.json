@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "rpg:ice_troll"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "rpg:ice_troll"
+      }
+    ]
+  }
+}

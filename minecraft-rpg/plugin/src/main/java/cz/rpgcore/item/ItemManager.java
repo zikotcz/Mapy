@@ -366,6 +366,10 @@ public final class ItemManager {
             out.add(Component.empty());
             out.add(Text.plain("Pravým klikem na zem vyvoláš bosse.", NamedTextColor.RED));
         }
+        if (def.type == ItemType.CRATE) {
+            out.add(Component.empty());
+            out.add(Text.plain("Pravým klikem otevřeš.", NamedTextColor.YELLOW));
+        }
         if (def.type == ItemType.ACCESSORY) {
             out.add(Component.empty());
             out.add(Text.plain("Nasaď v /rpg → Doplňky (nebo pravý klik)", DARK));

@@ -93,3 +93,11 @@ classes:
 npcs:
   # cena léčení u léčitele = úroveň hráče * tato hodnota
   heal-cost-per-level: 2
+
+# ---------------------------------------------------------------------------
+#  Menu
+# ---------------------------------------------------------------------------
+menus:
+  # vlastní pozadí menu z resource packu; false = obyčejná truhla
+  # (vypni, pokud hráči nemají pack povinný - bez něj by viděli divné znaky)
+  custom-textures: true

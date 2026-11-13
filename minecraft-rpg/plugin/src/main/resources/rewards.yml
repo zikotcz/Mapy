@@ -1,0 +1,38 @@
+# ============================================================================
+#  RPGCore - postupné odměny  (/rewards)
+#
+#  daily:    série denních odměn. Hráč si každý den vyzvedne další; když den
+#            vynechá, začíná znovu od prvního. Po posledním dni se cyklus opakuje.
+#  levels:   odměny, které hráč dostane automaticky při dosažení úrovně.
+#  playtime: odměna za každých X minut na serveru.
+# ============================================================================
+
+daily:
+  - {coins: 50, items: {health_potion_small: 2}}
+  - {coins: 80, items: {mana_potion_small: 2, hero_bread: 4}}
+  - {coins: 120, items: {wooden_crate: 1}}
+  - {coins: 160, items: {upgrade_stone: 1}}
+  - {coins: 220, items: {xp_tome: 1, health_potion_medium: 2}}
+  - {coins: 300, items: {iron_crate: 1}}
+  - {coins: 500, items: {golden_crate: 1, upgrade_stone: 2}}
+
+levels:
+  2: {coins: 30, items: {health_potion_small: 3}}
+  5: {coins: 100, items: {wooden_crate: 1, adventurer_helmet: 1}}
+  10: {coins: 250, items: {iron_crate: 1, upgrade_stone: 2}}
+  15: {coins: 400, items: {health_potion_medium: 5, mana_potion_medium: 5}}
+  20: {coins: 600, items: {iron_crate: 2, xp_tome: 1}}
+  25: {coins: 900, items: {golden_crate: 1}}
+  30: {coins: 1200, items: {golden_crate: 1, upgrade_stone: 5}}
+  40: {coins: 2000, items: {golden_crate: 2, greater_upgrade_stone: 1}}
+  50: {coins: 3500, items: {crystal_crate: 1, greater_tome: 2}}
+  60: {coins: 5000, items: {crystal_crate: 1, greater_upgrade_stone: 3}}
+  70: {coins: 8000, items: {crystal_crate: 2}}
+  80: {coins: 12000, items: {dragon_crate: 1}}
+  90: {coins: 20000, items: {dragon_crate: 2}}
+  100: {coins: 50000, items: {void_crate: 1}}
+
+playtime:
+  minutes: 30
+  coins: 40
+  items: {health_potion_small: 1}

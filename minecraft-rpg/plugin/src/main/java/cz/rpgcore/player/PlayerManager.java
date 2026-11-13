@@ -140,6 +140,9 @@ public final class PlayerManager implements Listener {
             }
         }
         d.completed.addAll(y.getStringList("completed"));
+        d.dailyDay = y.getLong("daily-day");
+        d.dailyStreak = y.getInt("daily-streak");
+        d.levelRewards.addAll(y.getIntegerList("level-rewards"));
         List<String> acc = y.getStringList("accessories");
         for (int i = 0; i < Math.min(acc.size(), d.accessories.length); i++) {
             if (!acc.get(i).isEmpty()) {
@@ -171,6 +174,9 @@ public final class PlayerManager implements Listener {
             y.set("quests." + id, list);
         });
         y.set("completed", new ArrayList<>(d.completed));
+        y.set("daily-day", d.dailyDay);
+        y.set("daily-streak", d.dailyStreak);
+        y.set("level-rewards", new ArrayList<>(d.levelRewards));
         List<String> acc = new ArrayList<>();
         for (ItemStack stack : d.accessories) {
             acc.add(stack == null || stack.getType().isAir() ? "" : Base64.getEncoder().encodeToString(stack.serializeAsBytes()));
@@ -254,6 +260,7 @@ public final class PlayerManager implements Listener {
         d.mana = d.maxMana;
         p.showTitle(Title.title(Text.mm("<gold><bold>ÚROVEŇ " + d.level), Text.mm("<gray>+" + points + " bodů atributů <dark_gray>(/rpg)")));
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+        plugin.rewards().onLevelUp(p, d);
         Text.send(p, "<gold>Postoupil jsi na úroveň <yellow>" + d.level + "<gold>! <gray>Máš <green>" + d.points + "<gray> volných bodů.");
     }
 

@@ -1,0 +1,119 @@
+# ============================================================================
+#  RPGCore - bedny
+#  Klíč = id předmětu typu CRATE z items.yml. Bedna se otevírá pravým klikem.
+#  loot: item (nebo bez item = mince), min/max = počet, weight = váha (vyšší = častější)
+#  announce se nepoužívá - epické a lepší výhry se oznamují celému serveru samy.
+# ============================================================================
+
+wooden_crate:
+  loot:
+    - {min: 20, max: 80, weight: 30}
+    - {item: health_potion_small, min: 2, max: 4, weight: 25}
+    - {item: mana_potion_small, min: 2, max: 4, weight: 25}
+    - {item: hero_bread, min: 3, max: 8, weight: 20}
+    - {item: ARROW, min: 16, max: 32, weight: 15}
+    - {item: steel_ingot, min: 1, max: 3, weight: 15}
+    - {item: magic_dust, min: 1, max: 3, weight: 15}
+    - {item: enchanted_leather, min: 1, max: 3, weight: 15}
+    - {item: upgrade_stone, weight: 8}
+    - {item: woodcutter_axe, weight: 5}
+    - {item: hunting_spear, weight: 5}
+    - {item: bone_knife, weight: 5}
+    - {item: oak_staff, weight: 5}
+    - {item: short_bow, weight: 5}
+    - {item: ring_of_vitality, weight: 3}
+    - {item: iron_crate, weight: 3}
+
+iron_crate:
+  loot:
+    - {min: 100, max: 300, weight: 30}
+    - {item: health_potion_medium, min: 2, max: 4, weight: 25}
+    - {item: mana_potion_medium, min: 2, max: 4, weight: 25}
+    - {item: upgrade_stone, min: 1, max: 3, weight: 20}
+    - {item: silver_ingot, min: 2, max: 5, weight: 15}
+    - {item: xp_tome, weight: 15}
+    - {item: scroll_teleport, min: 1, max: 3, weight: 10}
+    - {item: iron_mace, weight: 6}
+    - {item: steel_longsword, weight: 6}
+    - {item: nature_staff, weight: 6}
+    - {item: harvest_scythe, weight: 6}
+    - {item: elven_bow, weight: 6}
+    - {item: shadow_dagger, weight: 6}
+    - {item: ring_of_strength, weight: 4}
+    - {item: ring_of_wisdom, weight: 4}
+    - {item: ring_of_swiftness, weight: 4}
+    - {item: elixir_haste, weight: 6}
+    - {item: golden_crate, weight: 3}
+
+golden_crate:
+  loot:
+    - {min: 400, max: 1200, weight: 30}
+    - {item: health_potion_large, min: 2, max: 4, weight: 20}
+    - {item: mana_potion_large, min: 2, max: 4, weight: 20}
+    - {item: upgrade_stone, min: 3, max: 6, weight: 20}
+    - {item: greater_tome, weight: 15}
+    - {item: mithril_ingot, min: 1, max: 3, weight: 12}
+    - {item: elixir_strength, min: 1, max: 2, weight: 8}
+    - {item: elixir_wisdom, min: 1, max: 2, weight: 8}
+    - {item: wind_katana, weight: 5}
+    - {item: frost_bow, weight: 5}
+    - {item: frost_axe, weight: 5}
+    - {item: crystal_wand, weight: 5}
+    - {item: flame_lance, weight: 5}
+    - {item: holy_mace, weight: 5}
+    - {item: assassin_blade, weight: 5}
+    - {item: ring_of_fury, weight: 4}
+    - {item: feather_of_wind, weight: 4}
+    - {item: mage_sash, weight: 4}
+    - {item: greater_upgrade_stone, weight: 4}
+    - {item: crystal_crate, weight: 2}
+
+crystal_crate:
+  loot:
+    - {min: 1500, max: 4000, weight: 30}
+    - {item: greater_upgrade_stone, min: 1, max: 3, weight: 25}
+    - {item: ancient_tome, weight: 15}
+    - {item: ancient_rune, min: 1, max: 3, weight: 15}
+    - {item: elixir_fury, min: 1, max: 2, weight: 10}
+    - {item: elixir_titan, min: 1, max: 2, weight: 10}
+    - {item: soul_scythe, weight: 5}
+    - {item: shadow_bow, weight: 5}
+    - {item: frost_wand, weight: 5}
+    - {item: moonlight_katana, weight: 5}
+    - {item: sun_staff, weight: 4}
+    - {item: obsidian_blade, weight: 4}
+    - {item: skull_crusher, weight: 4}
+    - {item: amulet_of_storms, weight: 4}
+    - {item: shadow_clasp, weight: 4}
+    - {item: titan_belt, weight: 3}
+    - {item: dragon_crate, weight: 2}
+
+dragon_crate:
+  loot:
+    - {min: 5000, max: 12000, weight: 30}
+    - {item: greater_upgrade_stone, min: 3, max: 6, weight: 25}
+    - {item: dragon_scale, min: 2, max: 5, weight: 20}
+    - {item: ancient_tome, min: 1, max: 2, weight: 15}
+    - {item: doom_axe, weight: 5}
+    - {item: shadowfang_katana, weight: 5}
+    - {item: dragon_lance, weight: 5}
+    - {item: meteor_hammer, weight: 4}
+    - {item: sun_blade, weight: 4}
+    - {item: arcane_staff, weight: 4}
+    - {item: dragon_bow, weight: 4}
+    - {item: lich_shard, weight: 3}
+    - {item: dragon_heart_amulet, weight: 3}
+    - {item: void_crate, weight: 1}
+
+void_crate:
+  loot:
+    - {min: 15000, max: 40000, weight: 30}
+    - {item: void_shard, min: 3, max: 8, weight: 25}
+    - {item: greater_upgrade_stone, min: 5, max: 10, weight: 20}
+    - {item: ancient_tome, min: 2, max: 4, weight: 15}
+    - {item: void_scythe, weight: 4}
+    - {item: void_bow, weight: 4}
+    - {item: void_edge, weight: 4}
+    - {item: void_staff, weight: 4}
+    - {item: nightfall, weight: 4}
+    - {item: void_ring, weight: 3}

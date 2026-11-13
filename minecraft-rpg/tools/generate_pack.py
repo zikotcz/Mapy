@@ -998,6 +998,63 @@ T["eye"] = [
     "................",
 ]
 
+T["crate"] = [
+    "................",
+    "................",
+    "..############..",
+    ".#aAAAAAAAAAAb#.",
+    ".#abbbbbbbbbbc#.",
+    ".##############.",
+    ".#aBBBB#xy#BBc#.",
+    ".#aBCCC#yz#CCc#.",
+    ".#aBCCCC##CCDc#.",
+    ".#aCCCCCCCCDDc#.",
+    ".#aCCCCCCDDDDc#.",
+    ".#abbbbbbbbbbc#.",
+    ".#cccccccccccc#.",
+    "..############..",
+    "................",
+    "................",
+]
+
+T["mace"] = [
+    "..........#.#...",
+    ".........#A#B#..",
+    "........#AABBC#.",
+    ".......#AWBBCCD#",
+    "........#BBCCD#.",
+    ".......#aBCCD#D#",
+    "......#ab#CD#.#.",
+    ".....#ab#.##....",
+    "....#ab#........",
+    "...#ab#.........",
+    "..#ab#..........",
+    ".#ab#...........",
+    "#xb#............",
+    "#y#.............",
+    "##..............",
+    "................",
+]
+
+T["katana"] = [
+    "..............##",
+    ".............#A#",
+    "............#AB#",
+    "...........#AB#.",
+    "..........#AB#..",
+    ".........#AB#...",
+    "........#AB#....",
+    ".......#AB#.....",
+    "......#AB#......",
+    "....##AB#.......",
+    "...#xyB#........",
+    "...#ayx#........",
+    "..#ab###........",
+    ".#ab#...........",
+    "#ab#............",
+    "##..............",
+]
+
 for _name, _rows in T.items():
     assert len(_rows) == 16, f"sablona {_name}: {len(_rows)} radku"
     for _i, _r in enumerate(_rows):
@@ -1639,6 +1696,65 @@ def make_hud_icon(colors, rows):
 
 
 # ----------------------------------------------------------------------------
+#  Pozadí menu (vykreslí se jako znak fontu přes okno truhly)
+# ----------------------------------------------------------------------------
+def make_gui(rows):
+    w, h = 176, 114 + rows * 18
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    rng = random.Random(rows)
+    panel, panel_d, panel_l = (44, 36, 62), (30, 24, 44), (66, 56, 92)
+    gold, gold_d, gold_l = (214, 170, 72), (140, 100, 30), (255, 226, 140)
+    slot, slot_d, slot_l = (24, 20, 36), (12, 10, 20), (84, 74, 112)
+
+    def rect(x0, y0, x1, y1, c):
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                img.putpixel((x, y), c + (255,))
+
+    rect(2, 2, w - 2, h - 2, panel)
+    for _ in range(w * h // 14):                      # jemný šum, ať plocha není mrtvá
+        x, y = rng.randrange(3, w - 3), rng.randrange(3, h - 3)
+        img.putpixel((x, y), (panel_l if rng.random() < 0.4 else panel_d) + (255,))
+    # zlatý rám se zaoblenými rohy
+    for i, c in enumerate((gold_d, gold, gold_l)):
+        for x in range(2 + i, w - 2 - i):
+            img.putpixel((x, i), c + (255,))
+            img.putpixel((x, h - 1 - i), (gold_d if i < 2 else gold) + (255,))
+        for y in range(2 + i, h - 2 - i):
+            img.putpixel((i, y), c + (255,))
+            img.putpixel((w - 1 - i, y), (gold_d if i < 2 else gold) + (255,))
+    for cx, cy in ((1, 1), (w - 2, 1), (1, h - 2), (w - 2, h - 2)):
+        img.putpixel((cx, cy), gold + (255,))
+    # rohové ozdoby
+    for (ox, oy, sx, sy) in ((4, 4, 1, 1), (w - 5, 4, -1, 1), (4, h - 5, 1, -1), (w - 5, h - 5, -1, -1)):
+        for k in range(5):
+            img.putpixel((ox + sx * k, oy), gold_l + (255,))
+            img.putpixel((ox, oy + sy * k), gold_l + (255,))
+        img.putpixel((ox + sx * 2, oy + sy * 2), gold + (255,))
+    # pruh pod titulkem
+    rect(6, 4, w - 6, 15, panel_d)
+    rect(6, 15, w - 6, 16, gold_d)
+
+    def slots(y0, count_rows):
+        for r in range(count_rows):
+            for c in range(9):
+                x, y = 7 + c * 18, y0 + r * 18
+                rect(x, y, x + 18, y + 18, slot_d)
+                rect(x + 1, y + 1, x + 18, y + 18, slot_l)
+                rect(x + 1, y + 1, x + 17, y + 17, slot)
+
+    slots(17, rows)
+    inv_y = 17 + rows * 18 + 14
+    # světlý pruh pod nápisem "Inventář" (klient ho píše tmavě šedě)
+    rect(6, inv_y - 12, w - 6, inv_y - 2, (176, 160, 124))
+    rect(6, inv_y - 13, w - 6, inv_y - 12, gold_d)
+    rect(6, inv_y - 2, w - 6, inv_y - 1, gold_d)
+    slots(inv_y, 3)
+    slots(inv_y + 58, 1)
+    return img
+
+
+# ----------------------------------------------------------------------------
 #  Sestavení packu
 # ----------------------------------------------------------------------------
 ARMOR_ICONS = {
@@ -1761,6 +1877,17 @@ def build(sheet_path=None):
         providers.append({"type": "bitmap", "file": f"{NS}:font/{name}.png", "ascent": 7, "height": 8, "chars": [char]})
     write_json(assets / "font/icons.json", {"providers": providers})
 
+    # --- pozadí menu: znaky \uE100.. ve fontu rpg:gui, \uF801/\uF802 jsou záporné mezery ---
+    gui_providers = [{"type": "space", "advances": {"\uF801": -8, "\uF802": -169}}]
+    guis = {}
+    for rows in range(3, 7):
+        img = make_gui(rows)
+        save_png(assets / f"textures/gui/menu_{rows}.png", img)
+        gui_providers.append({"type": "bitmap", "file": f"{NS}:gui/menu_{rows}.png", "ascent": 13,
+                              "height": img.height, "chars": [chr(0xE100 + rows - 3)]})
+        guis[rows] = img
+    write_json(assets / "font/gui.json", {"providers": gui_providers})
+
     # --- pack.mcmeta + ikona ---
     write_json(OUT / "pack.mcmeta", {"pack": {
         "description": "RPGCore - vlastní předměty, brnění, bossové a NPC",
@@ -1790,6 +1917,7 @@ def build(sheet_path=None):
 
     if sheet_path:
         make_sheet(sheet_path, icons, equipment_sheets, skins)
+        guis[3].save(str(sheet_path).replace(".png", "_gui.png"))
 
 
 def make_sheet(path, icons, equipment, skins):

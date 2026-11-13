@@ -356,6 +356,210 @@ void_knight:
     - {item: ancient_rune, chance: 25}
     - {item: greater_upgrade_stone, chance: 5}
 
+goblin_brute:
+  name: "Goblin rváč"
+  type: ZOMBIE
+  level: 7
+  health: 90
+  damage: 8
+  costume: goblin
+  weapon: woodcutter_axe
+  scale: 1.1
+  weight: 5
+  xp: 26
+  coins: [3, 8]
+  natural: true
+  distance: [100, 900]
+  drops:
+    - {item: goblin_ear, chance: 70, min: 1, max: 2}
+    - {item: woodcutter_axe, chance: 3}
+    - {item: wooden_crate, chance: 2}
+
+orc_grunt:
+  name: "Ork"
+  type: ZOMBIE
+  level: 15
+  health: 200
+  damage: 16
+  costume: orc
+  weapon: iron_mace
+  scale: 1.1
+  xp: 58
+  coins: [7, 16]
+  natural: true
+  distance: [700, 2200]
+  drops:
+    - {item: orc_tusk, chance: 60}
+    - {item: iron_mace, chance: 2}
+    - {item: wooden_crate, chance: 3}
+
+orc_hunter:
+  name: "Ork lovec"
+  type: SKELETON
+  level: 16
+  health: 180
+  damage: 17
+  costume: orc
+  weapon: BOW
+  scale: 1.1
+  weight: 7
+  xp: 60
+  coins: [7, 16]
+  natural: true
+  distance: [700, 2200]
+  drops:
+    - {item: orc_tusk, chance: 50}
+    - {item: ARROW, chance: 60, min: 2, max: 5}
+    - {item: short_bow, chance: 2}
+
+drowned_pirate:
+  name: "Utopený pirát"
+  type: DROWNED
+  level: 20
+  health: 260
+  damage: 20
+  costume: pirate
+  weapon: steel_longsword
+  xp: 78
+  coins: [10, 24]
+  natural: true
+  distance: [0, 99999]
+  drops:
+    - {item: pirate_coin, chance: 45}
+    - {item: silver_ingot, chance: 12}
+    - {item: iron_crate, chance: 2}
+
+swamp_witch:
+  name: "Bažinná čarodějnice"
+  type: WITCH
+  level: 22
+  health: 240
+  damage: 10
+  xp: 90
+  coins: [10, 26]
+  natural: true
+  distance: [0, 99999]
+  drops:
+    - {item: magic_dust, chance: 60, min: 1, max: 2}
+    - {item: mana_potion_small, chance: 25}
+    - {item: elixir_haste, chance: 3}
+
+troll:
+  name: "Troll"
+  type: ZOMBIE
+  level: 24
+  health: 520
+  damage: 26
+  costume: troll
+  scale: 1.6
+  speed: 0.85
+  weight: 5
+  xp: 120
+  coins: [12, 28]
+  natural: true
+  distance: [1400, 3200]
+  drops:
+    - {item: troll_hide, chance: 55}
+    - {item: orc_tusk, chance: 40, min: 1, max: 2}
+    - {item: iron_crate, chance: 3}
+
+desert_mummy:
+  name: "Mumie"
+  type: HUSK
+  level: 30
+  health: 460
+  damage: 30
+  costume: mummy
+  element: POISON
+  xp: 150
+  coins: [14, 32]
+  natural: true
+  distance: [0, 99999]
+  drops:
+    - {item: ancient_bandage, chance: 55}
+    - {item: silver_ingot, chance: 15}
+    - {item: iron_crate, chance: 3}
+
+wandering_ghost:
+  name: "Bludný duch"
+  type: STRAY
+  level: 36
+  health: 520
+  damage: 34
+  costume: ghost
+  weapon: BOW
+  element: SHADOW
+  weight: 6
+  xp: 180
+  coins: [16, 36]
+  natural: true
+  distance: [1500, 99999]
+  drops:
+    - {item: ghost_dust, chance: 55}
+    - {item: magic_dust, chance: 40}
+    - {item: golden_crate, chance: 1}
+
+ice_troll:
+  name: "Ledový troll"
+  type: ZOMBIE
+  level: 38
+  health: 900
+  damage: 38
+  costume: ice_troll
+  scale: 1.6
+  speed: 0.85
+  element: FROST
+  weight: 5
+  xp: 220
+  coins: [18, 40]
+  natural: true
+  distance: [2400, 4200]
+  drops:
+    - {item: troll_hide, chance: 50}
+    - {item: frost_crystal, chance: 30}
+    - {item: golden_crate, chance: 2}
+
+dark_knight:
+  name: "Temný rytíř"
+  type: ZOMBIE
+  level: 58
+  health: 1300
+  damage: 54
+  costume: dark_knight
+  weapon: obsidian_blade
+  scale: 1.15
+  xp: 340
+  coins: [28, 64]
+  natural: true
+  distance: [3600, 5400]
+  drops:
+    - {item: dark_steel, chance: 40}
+    - {item: steel_ingot, chance: 50, min: 1, max: 3}
+    - {item: golden_crate, chance: 3}
+    - {item: greater_upgrade_stone, chance: 2}
+
+demon:
+  name: "Démon"
+  type: WITHER_SKELETON
+  level: 66
+  health: 1900
+  damage: 64
+  costume: demon
+  weapon: flame_lance
+  element: FIRE
+  fireproof: true
+  scale: 1.2
+  weight: 6
+  xp: 440
+  coins: [34, 76]
+  natural: true
+  distance: [0, 99999]
+  drops:
+    - {item: demon_horn, chance: 30}
+    - {item: fire_core, chance: 45}
+    - {item: dark_steel, chance: 25}
+    - {item: crystal_crate, chance: 1}
+
 # ---- poskoci bossů (nespawnují se sami) ----
 skeleton_minion:
   name: "Vyvolaný kostlivec"
